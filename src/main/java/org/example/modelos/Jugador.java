@@ -1,40 +1,33 @@
 package org.example.modelos;
 
+import org.example.modelos.enums.Posicion;
+
 import java.util.Objects;
 
-enum Posicion {
-    PORTERO, DEFENSA, MEDIO, DELANTERO;
-}
-
+// La clase Jugador se convierte en un POJO.
+// Solo contiene datos y no tiene lógica para crear IDs.
 public class Jugador {
 
     private final String id;
     private final String nombre;
     private final Posicion posicion;
+    // Añadimos equipoId para relacionar al jugador con su equipo.
+    // Esta es la forma correcta de gestionar relaciones en persistencia.
+    private final String equipoId;
     private final int ataque;
     private final int defensa;
     private final int pase;
     private final int porteria;
     private int estadoForma;
     private double precio;
-    private static int contador = 0;
 
-    public Jugador(String id, String nombre, String posicion, int ataque, int defensa, int pase, int porteria, int estadoForma, double precio) {
+    // El constructor ahora recibe todos los datos, incluido el ID.
+    // No hay lógica de autoincremento.
+    public Jugador(String id, String nombre, Posicion posicion, String equipoId, int ataque, int defensa, int pase, int porteria, int estadoForma, double precio) {
         this.id = id;
         this.nombre = nombre;
-        this.posicion = Posicion.valueOf(posicion);
-        this.ataque = ataque;
-        this.defensa = defensa;
-        this.pase = pase;
-        this.porteria = porteria;
-        this.estadoForma = estadoForma;
-        this.precio = precio;
-        contador++;
-    }
-    public Jugador(String nombre, String posicion, int ataque, int defensa, int pase, int porteria, int estadoForma, double precio) {
-        this.id = createID();
-        this.nombre = nombre;
-        this.posicion = Posicion.valueOf(posicion);
+        this.posicion = posicion;
+        this.equipoId = equipoId;
         this.ataque = ataque;
         this.defensa = defensa;
         this.pase = pase;
@@ -42,6 +35,8 @@ public class Jugador {
         this.estadoForma = estadoForma;
         this.precio = precio;
     }
+
+    // --- Getters y Setters ---
 
     public String getId() {
         return id;
@@ -53,6 +48,10 @@ public class Jugador {
 
     public Posicion getPosicion() {
         return posicion;
+    }
+
+    public String getEquipoId() {
+        return equipoId;
     }
 
     public int getAtaque() {
@@ -79,10 +78,6 @@ public class Jugador {
         return precio;
     }
 
-    public static int getContador() {
-        return contador;
-    }
-
     public void setEstadoForma(int estadoForma) {
         this.estadoForma = estadoForma;
     }
@@ -91,35 +86,23 @@ public class Jugador {
         this.precio = precio;
     }
 
-    private String createID() {
-        String identificador = String.format("%c%04d", 'P', contador);
-        contador++;
-        return identificador;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Jugador jugador)) return false;
-        return ataque == jugador.ataque && defensa == jugador.defensa && pase == jugador.pase && porteria == jugador.porteria && estadoForma == jugador.estadoForma && Double.compare(precio, jugador.precio) == 0 && Objects.equals(id, jugador.id) && Objects.equals(nombre, jugador.nombre) && posicion == jugador.posicion;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Jugador jugador = (Jugador) o;
+        return Objects.equals(id, jugador.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombre, posicion, ataque, defensa, pase, porteria, estadoForma, precio);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
-        return "Jugador{" +
-                "id='" + id + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", posicion=" + posicion +
-                ", ataque=" + ataque +
-                ", defensa=" + defensa +
-                ", pase=" + pase +
-                ", porteria=" + porteria +
-                ", estadoForma=" + estadoForma +
-                ", precio=" + precio +
-                '}';
+        // Formato mejorado para mostrar todos los datos relevantes del jugador.
+        return String.format("Jugador -> ID: %-5s | Nombre: %-25s | Pos: %-10s | EquipoID: %-4s | Precio: %.2f M€",
+                id, nombre, posicion, equipoId, precio);
     }
 }

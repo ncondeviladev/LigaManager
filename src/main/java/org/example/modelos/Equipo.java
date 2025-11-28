@@ -1,35 +1,27 @@
 package org.example.modelos;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
+// La clase Equipo se convierte en un POJO.
+// No debe generar sus propios IDs ni contener listas de otros objetos del modelo.
 public class Equipo {
     private final String id;
     private final String nombre;
     private int puntos;
-    private int gf;
-    private int gc;
-    private ArrayList<Jugador> jugadores;
-    private static int contador = 0;
+    private int gf; // Goles a favor
+    private int gc; // Goles en contra
 
-    public Equipo(String id, String nombre, int puntos, int gf, int gc, ArrayList<Jugador> jugadores) {
+    // El constructor recibe el ID. La responsabilidad de crearlo es de la capa de persistencia.
+    // Se elimina la lista de jugadores. La relación se gestiona desde Jugador (con equipoId).
+    public Equipo(String id, String nombre, int puntos, int gf, int gc) {
         this.id = id;
         this.nombre = nombre;
         this.puntos = puntos;
         this.gf = gf;
         this.gc = gc;
-        this.jugadores = jugadores;
-        contador++;
     }
 
-    public Equipo(String nombre, int puntos, int gf, int gc, ArrayList<Jugador> jugadores) {
-        this.jugadores = jugadores;
-        this.id = createID();
-        this.nombre = nombre;
-        this.puntos = puntos;
-        this.gf = gf;
-        this.gc = gc;
-    }
+    // --- Getters y Setters ---
 
     public String getId() {
         return id;
@@ -43,64 +35,43 @@ public class Equipo {
         return puntos;
     }
 
-    public int getGf() {
-        return gf;
-    }
-
-    public int getGc() {
-        return gc;
-    }
-
-    public ArrayList<Jugador> getJugadores() {
-        return jugadores;
-    }
-
-    public static int getContador() {
-        return contador;
-    }
-
     public void setPuntos(int puntos) {
         this.puntos = puntos;
+    }
+
+    public int getGf() {
+        return gf;
     }
 
     public void setGf(int gf) {
         this.gf = gf;
     }
 
+    public int getGc() {
+        return gc;
+    }
+
     public void setGc(int gc) {
         this.gc = gc;
     }
 
-    public void setJugadores(ArrayList<Jugador> jugadores) {
-        this.jugadores = jugadores;
-    }
-
-    private String createID() {
-        String identificador = String.format("%c%02d", 'T', contador);
-        contador++;
-        return identificador;
-    }
-
-    @Override
-    public String toString() {
-        return "Equipo{" +
-                "id='" + id + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", puntos=" + puntos +
-                ", gf=" + gf +
-                ", gc=" + gc +
-                ", jugadores=" + jugadores +
-                '}';
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Equipo equipo)) return false;
-        return puntos == equipo.puntos && gf == equipo.gf && gc == equipo.gc && Objects.equals(id, equipo.id) && Objects.equals(nombre, equipo.nombre) && Objects.equals(jugadores, equipo.jugadores);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Equipo equipo = (Equipo) o;
+        return Objects.equals(id, equipo.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombre, puntos, gf, gc, jugadores);
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        // Formato mejorado para una visualización más clara en la consola.
+        return String.format("Equipo -> ID: %-4s | Nombre: %-20s | Puntos: %-3d | GF: %-3d | GC: %-3d",
+                id, nombre, puntos, gf, gc);
     }
 }
