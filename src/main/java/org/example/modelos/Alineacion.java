@@ -14,6 +14,13 @@ public class Alineacion {
     private ArrayList<String> titulares; // Almacenamos solo los IDs de los jugadores.
     private Formacion formacion;
 
+    /**
+     * Constructor para crear una instancia de Alineacion.
+     *
+     * @param id        El identificador único de la alineación.
+     * @param titulares Una lista de IDs de los jugadores titulares.
+     * @param formacion La formación táctica utilizada.
+     */
     public Alineacion(String id, ArrayList<String> titulares, Formacion formacion) {
         this.id = id;
         this.titulares = titulares;
@@ -59,6 +66,11 @@ public class Alineacion {
         return Objects.hash(id);
     }
 
+    /**
+     * Devuelve una representación en cadena del objeto Alineacion.
+     *
+     * @return Una cadena formateada con los detalles de la alineación.
+     */
     @Override
     public String toString() {
         // Formato mejorado para mostrar la formación y el número de titulares.

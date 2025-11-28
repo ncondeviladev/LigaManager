@@ -17,7 +17,18 @@ public class Usuario {
     private String equipoId;
     private String alineacionId;
 
-    // El constructor recibe el ID y las referencias a otros objetos por su ID.
+    /**
+     * Constructor para crear una instancia de Usuario.
+     * El constructor recibe el ID y las referencias a otros objetos por su ID.
+     *
+     * @param id           El identificador único del usuario.
+     * @param tipoUsuario  El rol del usuario (ADMIN o ESTANDAR).
+     * @param email        El correo electrónico del usuario.
+     * @param password     La contraseña del usuario.
+     * @param saldo        El saldo monetario del usuario.
+     * @param equipoId     El ID del equipo gestionado por el usuario.
+     * @param alineacionId El ID de la alineación guardada por el usuario.
+     */
     public Usuario(String id, TipoUsuario tipoUsuario, String email, String password, double saldo, String equipoId, String alineacionId) {
         this.id = id;
         this.tipoUsuario = tipoUsuario;
@@ -83,6 +94,11 @@ public class Usuario {
         return Objects.hash(id);
     }
 
+    /**
+     * Devuelve una representación en cadena del objeto Usuario.
+     *
+     * @return Una cadena formateada con los detalles del usuario.
+     */
     @Override
     public String toString() {
         // Formato mejorado para una visualización más clara. Se omite la contraseña por seguridad.

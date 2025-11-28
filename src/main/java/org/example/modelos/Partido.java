@@ -15,6 +15,17 @@ public class Partido {
     // Un partido contiene una lista de objetos Gol para detallar el resultado.
     private List<Gol> goles;
 
+    /**
+     * Constructor para crear una instancia de Partido.
+     *
+     * @param id                El identificador único del partido.
+     * @param jornadaId         El ID de la jornada a la que pertenece el partido.
+     * @param equipoLocalId     El ID del equipo local.
+     * @param equipoVisitanteId El ID del equipo visitante.
+     * @param golesLocal        El número de goles del equipo local.
+     * @param golesVisitante    El número de goles del equipo visitante.
+     * @param goles             Una lista de objetos Gol que ocurrieron en el partido.
+     */
     public Partido(String id, String jornadaId, String equipoLocalId, String equipoVisitanteId, int golesLocal, int golesVisitante, List<Gol> goles) {
         this.id = id;
         this.jornadaId = jornadaId;
@@ -80,6 +91,11 @@ public class Partido {
         return Objects.hash(id);
     }
 
+    /**
+     * Devuelve una representación en cadena del objeto Partido.
+     *
+     * @return Una cadena formateada con el resultado del partido.
+     */
     @Override
     public String toString() {
         // Formato para mostrar el resultado del partido de forma clara.

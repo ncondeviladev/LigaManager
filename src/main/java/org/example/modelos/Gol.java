@@ -2,15 +2,23 @@ package org.example.modelos;
 
 import java.util.Objects;
 
-// Modelo para representar un gol necesario para la logica del partido.
-// Es un POJO simple que contiene los detalles de un evento de gol.
+// Modelo para representar un gol.
+// Es un POJO simple que contiene los detalles de un evento de gol. Necesario para la logica de partido
 public class Gol {
     private final String id;
     private final String partidoId;
     private final String jugadorId;
     private final int minuto;
 
-    // El constructor recibe todos los datos. La creación de IDs es responsabilidad del repositorio.
+    /**
+     * Constructor para crear una instancia de Gol.
+     * El constructor recibe todos los datos. La creación de IDs es responsabilidad del repositorio.
+     *
+     * @param id        El identificador único del gol.
+     * @param partidoId El ID del partido en el que se marcó el gol.
+     * @param jugadorId El ID del jugador que marcó el gol.
+     * @param minuto    El minuto en que se marcó el gol.
+     */
     public Gol(String id, String partidoId, String jugadorId, int minuto) {
         this.id = id;
         this.partidoId = partidoId;
@@ -49,6 +57,11 @@ public class Gol {
         return Objects.hash(id);
     }
 
+    /**
+     * Devuelve una representación en cadena del objeto Gol.
+     *
+     * @return Una cadena formateada con los detalles del gol.
+     */
     @Override
     public String toString() {
         // Formato claro para mostrar la información del gol.

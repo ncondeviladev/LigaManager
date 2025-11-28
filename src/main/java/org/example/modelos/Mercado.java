@@ -15,7 +15,15 @@ public class Mercado {
     // Se elimina la lógica de autogeneración de IDs (contador, createID).
     // Se elimina el campo 'usuarioCompra', ya que un item en venta aún no tiene comprador.
 
-    // El constructor ahora sigue el patrón POJO, recibiendo todos los datos necesarios.
+    /**
+     * Constructor para crear una instancia de Mercado (una oferta de venta).
+     * El constructor ahora sigue el patrón POJO, recibiendo todos los datos necesarios.
+     *
+     * @param id          El identificador único de la oferta.
+     * @param jugadorId   El ID del jugador que está en venta.
+     * @param vendedorId  El ID del usuario que vende el jugador.
+     * @param precioVenta El precio de la oferta.
+     */
     public Mercado(String id, String jugadorId, String vendedorId, double precioVenta) {
         this.id = id;
         this.jugadorId = jugadorId;
@@ -54,6 +62,11 @@ public class Mercado {
         return Objects.hash(id);
     }
 
+    /**
+     * Devuelve una representación en cadena del objeto Mercado (oferta).
+     *
+     * @return Una cadena formateada con los detalles de la oferta.
+     */
     @Override
     public String toString() {
         // Formato mejorado para una visualización clara de la oferta.

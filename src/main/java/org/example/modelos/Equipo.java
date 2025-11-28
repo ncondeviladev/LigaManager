@@ -11,8 +11,17 @@ public class Equipo {
     private int gf; // Goles a favor
     private int gc; // Goles en contra
 
-    // El constructor recibe el ID. La responsabilidad de crearlo es de la capa de persistencia.
-    // Se elimina la lista de jugadores. La relación se gestiona desde Jugador (con equipoId).
+    /**
+     * Constructor para crear una instancia de Equipo.
+     * El constructor recibe el ID. La responsabilidad de crearlo es de la capa de persistencia.
+     * Se elimina la lista de jugadores. La relación se gestiona desde Jugador (con equipoId).
+     *
+     * @param id     El identificador único del equipo.
+     * @param nombre El nombre del equipo.
+     * @param puntos Los puntos actuales del equipo en la liga.
+     * @param gf     Los goles a favor del equipo.
+     * @param gc     Los goles en contra del equipo.
+     */
     public Equipo(String id, String nombre, int puntos, int gf, int gc) {
         this.id = id;
         this.nombre = nombre;
@@ -68,6 +77,11 @@ public class Equipo {
         return Objects.hash(id);
     }
 
+    /**
+     * Devuelve una representación en cadena del objeto Equipo.
+     *
+     * @return Una cadena formateada con los detalles del equipo.
+     */
     @Override
     public String toString() {
         // Formato mejorado para una visualización más clara en la consola.
