@@ -1,49 +1,35 @@
 package org.example.modelos;
 
+import org.example.modelos.enums.TipoUsuario;
+
 import java.util.Objects;
 
-enum TipoUsuario {
-    admin, ESTANDAR
-}
-
+// La clase Usuario se convierte en un POJO.
 public class Usuario {
     private final String id;
     private final TipoUsuario tipoUsuario;
     private final String email;
     private final String password;
     private double saldo;
-    private final Equipo equipo;
-    private final Alineacion alineacion;
-    private static int contador = 0;
 
-    public Usuario(String tipoUsuario, String email, String password, double saldo, Equipo equipo, Alineacion alineacion) {
-        this.id = createID();
-        this.tipoUsuario = TipoUsuario.valueOf(tipoUsuario);
-        this.email = email;
-        this.password = password;
-        this.saldo = saldo;
-        this.equipo = equipo;
-        this.alineacion = alineacion;
-    }
+    // Se reemplazan los objetos completos por sus IDs.
+    // Esto desacopla las clases y simplifica la persistencia.
+    private String equipoId;
+    private String alineacionId;
 
-    public Usuario(String id, String tipoUsuario, String email, String password, double saldo, Equipo equipo, Alineacion alineacion) {
+    // El constructor recibe el ID y las referencias a otros objetos por su ID.
+    public Usuario(String id, TipoUsuario tipoUsuario, String email, String password, double saldo, String equipoId, String alineacionId) {
         this.id = id;
-        this.tipoUsuario = TipoUsuario.valueOf(tipoUsuario);
+        this.tipoUsuario = tipoUsuario;
         this.email = email;
         this.password = password;
         this.saldo = saldo;
-        this.equipo = equipo;
-        this.alineacion = alineacion;
-        contador++;
+        this.equipoId = equipoId;
+        this.alineacionId = alineacionId;
     }
 
-    private String createID() {
-        String identificador = String.format("%c%04d", 'U', contador);
-        contador++;
-        return identificador;
-    }
+    // --- Getters y Setters ---
 
-    //GETTERS
     public String getId() {
         return id;
     }
@@ -64,45 +50,43 @@ public class Usuario {
         return saldo;
     }
 
-    public Equipo getEquipo() {
-        return equipo;
-    }
-
-    public Alineacion getAlineacion() {
-        return alineacion;
-    }
-
-    public static int getContador() {
-        return contador;
-    }
-
-    //SETTERS
-
     public void setSaldo(double saldo) {
         this.saldo = saldo;
     }
 
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "id='" + id + '\'' +
-                ", tipoUsuario=" + tipoUsuario +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", saldo=" + saldo +
-                ", equipo=" + equipo +
-                ", alineacion=" + alineacion +
-                '}';
+    public String getEquipoId() {
+        return equipoId;
+    }
+
+    public void setEquipoId(String equipoId) {
+        this.equipoId = equipoId;
+    }
+
+    public String getAlineacionId() {
+        return alineacionId;
+    }
+
+    public void setAlineacionId(String alineacionId) {
+        this.alineacionId = alineacionId;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Usuario usuario)) return false;
-        return Double.compare(saldo, usuario.saldo) == 0 && Objects.equals(id, usuario.id) && tipoUsuario == usuario.tipoUsuario && Objects.equals(email, usuario.email) && Objects.equals(password, usuario.password) && Objects.equals(equipo, usuario.equipo) && Objects.equals(alineacion, usuario.alineacion);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return Objects.equals(id, usuario.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tipoUsuario, email, password, saldo, equipo, alineacion);
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        // Formato mejorado para una visualización más clara. Se omite la contraseña por seguridad.
+        return String.format("Usuario -> ID: %-5s | Email: %-25s | Rol: %-10s | Saldo: %.2f M€ | EquipoID: %-4s",
+                id, email, tipoUsuario, saldo, equipoId);
     }
 }

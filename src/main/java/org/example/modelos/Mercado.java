@@ -2,80 +2,62 @@ package org.example.modelos;
 
 import java.util.Objects;
 
+// NOTA: Esta clase representa una única oferta en el mercado.
+// Para mayor claridad, sería recomendable renombrar la clase (y el fichero) a "Venta" o "Oferta".
 public class Mercado {
 
-    private final String id ;
-    private final Usuario usuarioVenta;
-    private final Jugador jugador;
+    private final String id;
+    // Se usan IDs en lugar de objetos para mantener el modelo simple y desacoplado.
+    private final String jugadorId;
+    private final String vendedorId;
     private final double precioVenta;
-    private final Usuario usuarioCompra;
-    private static int contador = 0;
 
-    public Mercado(String id, Usuario usuarioVenta, Jugador jugador, double precioVenta, Usuario usuarioCompra) {
+    // Se elimina la lógica de autogeneración de IDs (contador, createID).
+    // Se elimina el campo 'usuarioCompra', ya que un item en venta aún no tiene comprador.
+
+    // El constructor ahora sigue el patrón POJO, recibiendo todos los datos necesarios.
+    public Mercado(String id, String jugadorId, String vendedorId, double precioVenta) {
         this.id = id;
-        this.usuarioVenta = usuarioVenta;
-        this.jugador = jugador;
+        this.jugadorId = jugadorId;
+        this.vendedorId = vendedorId;
         this.precioVenta = precioVenta;
-        this.usuarioCompra = usuarioCompra;
-        contador++;
     }
-    public Mercado(Usuario usuarioVenta, Jugador jugador, double precioVenta, Usuario usuarioCompra) {
-        this.id = createID();
-        this.usuarioVenta = usuarioVenta;
-        this.jugador = jugador;
-        this.precioVenta = precioVenta;
-        this.usuarioCompra = usuarioCompra;
-    }
+
+    // --- Getters ---
 
     public String getId() {
         return id;
     }
 
-    public Usuario getUsuarioVenta() {
-        return usuarioVenta;
+    public String getJugadorId() {
+        return jugadorId;
     }
 
-    public Jugador getJugador() {
-        return jugador;
+    public String getVendedorId() {
+        return vendedorId;
     }
 
     public double getPrecioVenta() {
         return precioVenta;
     }
 
-    public Usuario getUsuarioCompra() {
-        return usuarioCompra;
-    }
-
-    public static int getContador() {
-        return contador;
-    }
-
-    private String createID() {
-        String identificador = String.format("%c%04d", 'M', contador);
-        contador++;
-        return identificador;
-    }
-
-    @Override
-    public String toString() {
-        return "Mercado{" +
-                "id='" + id + '\'' +
-                ", usuarioVenta=" + usuarioVenta +
-                ", jugador=" + jugador +
-                ", precioVenta=" + precioVenta +
-                ", usuarioCompra=" + usuarioCompra +
-                '}';
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Mercado mercado)) return false;
-        return Double.compare(precioVenta, mercado.precioVenta) == 0 && Objects.equals(id, mercado.id) && Objects.equals(usuarioVenta, mercado.usuarioVenta) && Objects.equals(jugador, mercado.jugador) && Objects.equals(usuarioCompra, mercado.usuarioCompra);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Mercado mercado = (Mercado) o;
+        return Objects.equals(id, mercado.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, usuarioVenta, jugador, precioVenta, usuarioCompra);
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        // Formato mejorado para una visualización clara de la oferta.
+        return String.format("Oferta Mercado -> ID: %-5s | JugadorID: %-5s | VendedorID: %-5s | Precio: %.2f M€",
+                id, jugadorId, vendedorId, precioVenta);
     }
 }
