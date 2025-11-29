@@ -1,4 +1,20 @@
 package org.example.repositorios.dao;
 
-public class JugadorDAO {
+import org.example.modelos.Jugador;
+import java.util.List;
+import java.util.Optional;
+
+// Interfaz DAO para la gestión de la entidad Jugador.
+public interface JugadorDAO {
+    List<Jugador> listarTodos();
+
+    List<Jugador> buscarPorEquipoId(String equipoId);
+
+    Optional<Jugador> buscarPorId(String id);
+
+    void guardar(Jugador jugador);
+
+    void guardarTodos(List<Jugador> jugadores);
+
+    void eliminarPorId(String id);
 }

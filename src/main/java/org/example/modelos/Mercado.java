@@ -1,21 +1,26 @@
 package org.example.modelos;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.Objects;
 
-// NOTA: Esta clase representa una única oferta en el mercado.
-// Para mayor claridad, sería recomendable renombrar la clase (y el fichero) a "Venta" o "Oferta".
+// Clase que representa una oferta de venta en el mercado de fichajes.
+// Refactorizada para coincidir con market.json usando @SerializedName
 public class Mercado {
 
     private final String id;
-    // Se usan IDs en lugar de objetos para mantener el modelo simple y desacoplado.
+
+    // ID del jugador que está en venta
     private final String jugadorId;
+
+    // En el JSON se llama "vendedor", mapeamos con @SerializedName
+    @SerializedName("vendedor")
     private final String vendedorId;
+
+    // En el JSON se llama "precioSalida", mapeamos con @SerializedName
+    @SerializedName("precioSalida")
     private final double precioVenta;
 
-    // Se elimina la lógica de autogeneración de IDs (contador, createID).
-    // Se elimina el campo 'usuarioCompra', ya que un item en venta aún no tiene comprador.
-
-    // El constructor ahora sigue el patrón POJO, recibiendo todos los datos necesarios.
+    // Constructor POJO que recibe todos los datos necesarios
     public Mercado(String id, String jugadorId, String vendedorId, double precioVenta) {
         this.id = id;
         this.jugadorId = jugadorId;
@@ -43,8 +48,10 @@ public class Mercado {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Mercado mercado = (Mercado) o;
         return Objects.equals(id, mercado.id);
     }
@@ -56,7 +63,6 @@ public class Mercado {
 
     @Override
     public String toString() {
-        // Formato mejorado para una visualización clara de la oferta.
         return String.format("Oferta Mercado -> ID: %-5s | JugadorID: %-5s | VendedorID: %-5s | Precio: %.2f M€",
                 id, jugadorId, vendedorId, precioVenta);
     }

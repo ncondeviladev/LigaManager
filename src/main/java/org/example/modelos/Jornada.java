@@ -4,17 +4,24 @@ import java.util.List;
 import java.util.Objects;
 
 // Modelo para representar una jornada de la liga.
-// Agrupa una lista de partidos que se disputan en esa jornada.
+// Refactorizado para usar composición: contiene objetos Partido completos
+// en lugar de solo IDs, facilitando el acceso a los datos y la serialización JSON.
 public class Jornada {
-    private final String id;
-    private final int numero;
-    // Contiene una lista de los IDs de los partidos, no los objetos completos.
-    private List<String> partidosIds;
 
-    public Jornada(String id, int numero, List<String> partidosIds) {
+    // ID de la jornada (ej: "J01", "J02")
+    private final String id;
+
+    // Número de la jornada (1, 2, 3...)
+    private final int numero;
+
+    // Lista de partidos que se juegan en esta jornada (objetos completos)
+    private List<Partido> partidos;
+
+    // Constructor
+    public Jornada(String id, int numero, List<Partido> partidos) {
         this.id = id;
         this.numero = numero;
-        this.partidosIds = partidosIds;
+        this.partidos = partidos;
     }
 
     // --- Getters y Setters ---
@@ -27,18 +34,20 @@ public class Jornada {
         return numero;
     }
 
-    public List<String> getPartidosIds() {
-        return partidosIds;
+    public List<Partido> getPartidos() {
+        return partidos;
     }
 
-    public void setPartidosIds(List<String> partidosIds) {
-        this.partidosIds = partidosIds;
+    public void setPartidos(List<Partido> partidos) {
+        this.partidos = partidos;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Jornada jornada = (Jornada) o;
         return Objects.equals(id, jornada.id);
     }
@@ -50,8 +59,7 @@ public class Jornada {
 
     @Override
     public String toString() {
-        // Formato claro para identificar la jornada.
         return String.format("Jornada %d (ID: %s) -> %d partidos",
-                numero, id, partidosIds.size());
+                numero, id, partidos != null ? partidos.size() : 0);
     }
 }

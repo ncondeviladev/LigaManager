@@ -1,31 +1,55 @@
 package org.example.modelos;
 
+import com.google.gson.annotations.SerializedName;
 import org.example.modelos.enums.TipoUsuario;
-
 import java.util.Objects;
 
-// La clase Usuario se convierte en un POJO.
+// Clase Usuario refactorizada para coincidir con users.json
+// Cambios principales:
+// - "nombre" → "email" (el JSON usa email como identificador de usuario)
+// - "tipoUsuario" → "tipo" en JSON
+// - "alineacionId" → objeto Alineacion completo (composición, como en JSON)
 public class Usuario {
+
     private final String id;
-    private final TipoUsuario tipoUsuario;
-    private final String email;
-    private final String password;
+
+    // En el JSON se llama "email", pero en Java usamos "email" como nombre de
+    // variable
+    // para mayor claridad semántica
+    @SerializedName("email")
+    private String email;
+
+    private String password;
+
+    // En el JSON se llama "tipo", mapeamos con @SerializedName
+    @SerializedName("tipo")
+    private TipoUsuario tipoUsuario;
+
     private double saldo;
 
-    // Se reemplazan los objetos completos por sus IDs.
-    // Esto desacopla las clases y simplifica la persistencia.
-    private String equipoId;
-    private String alineacionId;
+    // La alineación se guarda como objeto completo dentro del usuario (composición)
+    // Esto coincide con la estructura del JSON donde "alineacion" es un objeto
+    // anidado
+    private Alineacion alineacion;
 
-    // El constructor recibe el ID y las referencias a otros objetos por su ID.
-    public Usuario(String id, TipoUsuario tipoUsuario, String email, String password, double saldo, String equipoId, String alineacionId) {
+    // Constructor básico
+    public Usuario(String id, String email, String password, TipoUsuario tipoUsuario, double saldo) {
         this.id = id;
-        this.tipoUsuario = tipoUsuario;
         this.email = email;
         this.password = password;
+        this.tipoUsuario = tipoUsuario;
         this.saldo = saldo;
-        this.equipoId = equipoId;
-        this.alineacionId = alineacionId;
+    }
+
+    // Constructor completo con alineación
+    public Usuario(String id, String email, String password, TipoUsuario tipoUsuario,
+            double saldo, Alineacion alineacion) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.tipoUsuario = tipoUsuario;
+        this.saldo = saldo;
+        this.alineacion = alineacion;
     }
 
     // --- Getters y Setters ---
@@ -34,16 +58,28 @@ public class Usuario {
         return id;
     }
 
-    public TipoUsuario getTipoUsuario() {
-        return tipoUsuario;
-    }
-
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public TipoUsuario getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(TipoUsuario tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 
     public double getSaldo() {
@@ -54,26 +90,20 @@ public class Usuario {
         this.saldo = saldo;
     }
 
-    public String getEquipoId() {
-        return equipoId;
+    public Alineacion getAlineacion() {
+        return alineacion;
     }
 
-    public void setEquipoId(String equipoId) {
-        this.equipoId = equipoId;
-    }
-
-    public String getAlineacionId() {
-        return alineacionId;
-    }
-
-    public void setAlineacionId(String alineacionId) {
-        this.alineacionId = alineacionId;
+    public void setAlineacion(Alineacion alineacion) {
+        this.alineacion = alineacion;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Usuario usuario = (Usuario) o;
         return Objects.equals(id, usuario.id);
     }
@@ -85,8 +115,7 @@ public class Usuario {
 
     @Override
     public String toString() {
-        // Formato mejorado para una visualización más clara. Se omite la contraseña por seguridad.
-        return String.format("Usuario -> ID: %-5s | Email: %-25s | Rol: %-10s | Saldo: %.2f M€ | EquipoID: %-4s",
-                id, email, tipoUsuario, saldo, equipoId);
+        return String.format("Usuario -> ID: %-5s | Email: %-20s | Rol: %-10s | Saldo: %.2f M€",
+                id, email, tipoUsuario, saldo);
     }
 }
