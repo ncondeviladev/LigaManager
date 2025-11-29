@@ -1,20 +1,20 @@
 package org.example.repositorios.dao;
 
 import org.example.modelos.Usuario;
-
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Interfaz DAO para el modelo Usuario.
- * Define las operaciones de persistencia para la entidad Usuario.
- */
+// Interfaz DAO para la gestión de Usuarios.
 public interface UsuarioDAO {
-    List<Usuario> buscarTodos();
+    List<Usuario> listarTodos();
+
     Optional<Usuario> buscarPorId(String id);
-    Optional<Usuario> buscarPorEmail(String email);
+
+    Optional<Usuario> buscarPorNombre(String nombre);
+
     void guardar(Usuario usuario);
+
     void guardarTodos(List<Usuario> usuarios);
+
     void eliminarPorId(String id);
-    void eliminarTodos();
 }

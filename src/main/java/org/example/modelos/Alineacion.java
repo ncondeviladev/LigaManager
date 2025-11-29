@@ -1,49 +1,44 @@
 package org.example.modelos;
 
 import org.example.modelos.enums.Formacion;
-
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-// La clase Alineacion ahora es un POJO (Plain Old Java Object) simple.
-// No contiene lógica de negocio ni definiciones de otros tipos.
+// Clase Alineacion refactorizada para coincidir con la estructura del JSON users.json
+// En el JSON, la alineación se guarda con campos separados por posición (portero, defensas, medios, delanteros)
+// en lugar de una lista única de titulares.
 public class Alineacion {
-    // Añadimos un ID para que la alineación pueda ser identificada de forma única.
-    // Esto es crucial para referenciarla desde la clase Usuario.
-    private String id;
-    private ArrayList<String> titulares; // Almacenamos solo los IDs de los jugadores.
+
+    // La formación táctica (4-4-2, 4-3-3, etc.)
     private Formacion formacion;
 
-    /**
-     * Constructor para crear una instancia de Alineacion.
-     *
-     * @param id        El identificador único de la alineación.
-     * @param titulares Una lista de IDs de los jugadores titulares.
-     * @param formacion La formación táctica utilizada.
-     */
-    public Alineacion(String id, ArrayList<String> titulares, Formacion formacion) {
-        this.id = id;
-        this.titulares = titulares;
+    // ID del jugador que juega como portero
+    private String portero;
+
+    // Lista de IDs de jugadores que juegan como defensas
+    private List<String> defensas;
+
+    // Lista de IDs de jugadores que juegan como medios
+    private List<String> medios;
+
+    // Lista de IDs de jugadores que juegan como delanteros
+    private List<String> delanteros;
+
+    // Constructor vacío necesario para Gson
+    public Alineacion() {
+    }
+
+    // Constructor completo
+    public Alineacion(Formacion formacion, String portero, List<String> defensas,
+            List<String> medios, List<String> delanteros) {
         this.formacion = formacion;
+        this.portero = portero;
+        this.defensas = defensas;
+        this.medios = medios;
+        this.delanteros = delanteros;
     }
 
     // --- Getters y Setters ---
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public ArrayList<String> getTitulares() {
-        return titulares;
-    }
-
-    public void setTitulares(ArrayList<String> titulares) {
-        this.titulares = titulares;
-    }
 
     public Formacion getFormacion() {
         return formacion;
@@ -53,28 +48,63 @@ public class Alineacion {
         this.formacion = formacion;
     }
 
+    public String getPortero() {
+        return portero;
+    }
+
+    public void setPortero(String portero) {
+        this.portero = portero;
+    }
+
+    public List<String> getDefensas() {
+        return defensas;
+    }
+
+    public void setDefensas(List<String> defensas) {
+        this.defensas = defensas;
+    }
+
+    public List<String> getMedios() {
+        return medios;
+    }
+
+    public void setMedios(List<String> medios) {
+        this.medios = medios;
+    }
+
+    public List<String> getDelanteros() {
+        return delanteros;
+    }
+
+    public void setDelanteros(List<String> delanteros) {
+        this.delanteros = delanteros;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Alineacion that = (Alineacion) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(formacion, that.formacion) &&
+                Objects.equals(portero, that.portero) &&
+                Objects.equals(defensas, that.defensas) &&
+                Objects.equals(medios, that.medios) &&
+                Objects.equals(delanteros, that.delanteros);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(formacion, portero, defensas, medios, delanteros);
     }
 
-    /**
-     * Devuelve una representación en cadena del objeto Alineacion.
-     *
-     * @return Una cadena formateada con los detalles de la alineación.
-     */
     @Override
     public String toString() {
-        // Formato mejorado para mostrar la formación y el número de titulares.
-        return String.format("Alineacion -> ID: %-5s | Formación: %-5s | Titulares: %s",
-                id, formacion.getValor(), titulares.toString());
+        return String.format("Alineacion -> Formación: %s | Portero: %s | Defensas: %d | Medios: %d | Delanteros: %d",
+                formacion, portero,
+                defensas != null ? defensas.size() : 0,
+                medios != null ? medios.size() : 0,
+                delanteros != null ? delanteros.size() : 0);
     }
 }
