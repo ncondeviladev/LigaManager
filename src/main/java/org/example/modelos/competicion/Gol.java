@@ -1,4 +1,4 @@
-package org.example.modelos;
+package org.example.modelos.competicion;
 
 import java.util.Objects;
 

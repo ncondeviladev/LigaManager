@@ -1,0 +1,32 @@
+{
+    "jornadas": [
+        {
+            "id": "J01",
+            "numero": 1,
+            "partidos": [
+                {
+                    "id": "PAR0001",
+                    "jornadaId": "J01",
+                    "equipoLocalId": "T01",
+                    "equipoVisitanteId": "T02",
+                    "golesLocal": 2,
+                    "golesVisitante": 1,
+                    "goles": [
+                        {
+                            "jugadorId": "P0009",
+                            "minuto": 23
+                        },
+                        {
+                            "jugadorId": "P0010",
+                            "minuto": 67
+                        },
+                        {
+                            "jugadorId": "P0035",
+                            "minuto": 45
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
