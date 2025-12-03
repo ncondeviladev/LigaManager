@@ -1,5 +1,7 @@
 package org.example.utils;
 
+import org.example.vistasycontroladores.vistas.menu.Menu;
+
 import java.util.Scanner;
 
 public class MenuUtils {
@@ -12,7 +14,7 @@ public class MenuUtils {
      * @return El número (1-based) de la opción seleccionada por el usuario.
      */
     public static int crearMenu(String titulo, String... opciones) {
-        Scanner sc = new Scanner(System.in);
+        Scanner sc = Menu.sc;
         while (true) {
             System.out.println("====================");
             System.out.println(titulo.toUpperCase());
