@@ -3,8 +3,7 @@ package org.example.repositorios.json;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.example.modelos.Equipo;
-import org.example.modelos.Jornada;
+import org.example.modelos.competicion.Jornada;
 import org.example.repositorios.dao.JornadaDAO;
 
 import java.io.FileReader;

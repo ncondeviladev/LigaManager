@@ -1,6 +1,6 @@
 package org.example.repositorios.dao;
 
-import org.example.modelos.Partido;
+import org.example.modelos.competicion.Partido;
 
 import java.util.List;
 import java.util.Optional;
