@@ -7,7 +7,8 @@
       "password": "5e5bdb9bb8366ca74e4cba341b5c6a36d1b2a4b3c7fcb7ff2519b9b4f6f2d85d",
       "saldo": -1.0,
       "equipo": null,
-      "alineacion": null
+      "alineacion": null,
+      "idEquipo": null
     },
     {
       "id": "U0001",
@@ -19,22 +20,23 @@
         "formacion": "4-4-2",
         "portero": "P0001",
         "defensas": [
-          "P0162",
-          "P0202",
-          "P0051",
-          "P0273"
+          "P0003",
+          "P0004",
+          "P0005",
+          "P0006"
         ],
         "medios": [
-          "P0083",
-          "P0011",
-          "P0038",
-          "P0319"
+          "P0013",
+          "P0014",
+          "P0015",
+          "P0016"
         ],
         "delanteros": [
-          "P0417",
-          "P0241"
+          "P0009",
+          "P0010"
         ]
-      }
+      },
+      "idEquipo": "T01"
     },
     {
       "id": "U0002",
@@ -44,24 +46,25 @@
       "saldo": 60.0,
       "alineacion": {
         "formacion": "4-4-2",
-        "portero": "P0399",
+        "portero": "P0023",
         "defensas": [
-          "P0400",
-          "P0295",
-          "P0273",
-          "P0428"
+          "P0025",
+          "P0026",
+          "P0027",
+          "P0028"
         ],
         "medios": [
-          "P0388",
-          "P0188",
-          "P0127",
-          "P0366"
+          "P0031",
+          "P0032",
+          "P0033",
+          "P0034"
         ],
         "delanteros": [
-          "P0022",
-          "P0174"
+          "P0035",
+          "P0036"
         ]
-      }
+      },
+      "idEquipo": "T02"
     },
     {
       "id": "U0003",
@@ -71,24 +74,25 @@
       "saldo": 45.0,
       "alineacion": {
         "formacion": "4-4-2",
-        "portero": "P0135",
+        "portero": "P0045",
         "defensas": [
-          "P0075",
-          "P0052",
-          "P0271",
-          "P0137"
+          "P0047",
+          "P0048",
+          "P0049",
+          "P0050"
         ],
         "medios": [
-          "P0127",
-          "P0060",
-          "P0079",
-          "P0277"
+          "P0052",
+          "P0053",
+          "P0054",
+          "P0055"
         ],
         "delanteros": [
-          "P0414",
-          "P0021"
+          "P0057",
+          "P0058"
         ]
-      }
+      },
+      "idEquipo": "T03"
     }
   ]
 }

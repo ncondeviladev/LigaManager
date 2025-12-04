@@ -11,7 +11,7 @@ import java.util.Objects;
 // - "alineacionId" → objeto Alineacion completo (composición, como en JSON)
 public class Usuario {
 
-    private final String id;
+    private String id;
 
     // En el JSON se llama "email", pero en Java usamos "email" como nombre de
     // variable
@@ -32,6 +32,14 @@ public class Usuario {
     // anidado
     private Alineacion alineacion;
 
+    // ID del equipo que gestiona el usuario
+    @SerializedName("idEquipo")
+    private String idEquipo;
+
+    // Constructor vacío para GSON/JPA
+    public Usuario() {
+    }
+
     // Constructor básico
     public Usuario(String id, String email, String password, TipoUsuario tipoUsuario, double saldo) {
         this.id = id;
@@ -41,15 +49,22 @@ public class Usuario {
         this.saldo = saldo;
     }
 
-    // Constructor completo con alineación
+    // Constructor completo con alineación (compatibilidad)
+    public Usuario(String id, String email, String password, TipoUsuario tipoUsuario, double saldo,
+            Alineacion alineacion) {
+        this(id, email, password, tipoUsuario, saldo, alineacion, null);
+    }
+
+    // Constructor completo con alineación y equipo
     public Usuario(String id, String email, String password, TipoUsuario tipoUsuario,
-            double saldo, Alineacion alineacion) {
+            double saldo, Alineacion alineacion, String idEquipo) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.tipoUsuario = tipoUsuario;
         this.saldo = saldo;
         this.alineacion = alineacion;
+        this.idEquipo = idEquipo;
     }
 
     // --- Getters y Setters ---
@@ -98,6 +113,14 @@ public class Usuario {
         this.alineacion = alineacion;
     }
 
+    public String getIdEquipo() {
+        return idEquipo;
+    }
+
+    public void setIdEquipo(String idEquipo) {
+        this.idEquipo = idEquipo;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -115,7 +138,7 @@ public class Usuario {
 
     @Override
     public String toString() {
-        return String.format("Usuario -> ID: %-5s | Email: %-20s | Rol: %-10s | Saldo: %.2f M€",
-                id, email, tipoUsuario, saldo);
+        return String.format("Usuario -> ID: %-5s | Email: %-20s | Rol: %-10s | Saldo: %.2f M€ | EquipoID: %s",
+                id, email, tipoUsuario, saldo, (idEquipo != null ? idEquipo : "Sin equipo"));
     }
 }

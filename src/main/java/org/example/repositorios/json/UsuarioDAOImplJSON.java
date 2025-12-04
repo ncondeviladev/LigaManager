@@ -85,4 +85,11 @@ public class UsuarioDAOImplJSON implements UsuarioDAO {
             guardarTodos(usuarios);
         }
     }
+
+    @Override
+    public List<Usuario> buscarPorIdEquipo(String idEquipo) {
+        return listarTodos().stream()
+                .filter(u -> idEquipo.equals(u.getIdEquipo()))
+                .toList();
+    }
 }
