@@ -50,8 +50,8 @@ public class Usuario {
     }
 
     // Constructor completo con alineación (compatibilidad)
-    public Usuario(String id, String email, String password, TipoUsuario tipoUsuario, double saldo,
-            Alineacion alineacion) {
+    public Usuario(String id, String email, String password, TipoUsuario tipoUsuario,
+            double saldo, Alineacion alineacion) {
         this(id, email, password, tipoUsuario, saldo, alineacion, null);
     }
 

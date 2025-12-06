@@ -18,5 +18,5 @@ public interface UsuarioDAO {
 
     void eliminarPorId(String id);
 
-    List<Usuario> buscarPorIdEquipo(String idEquipo);
+    Optional<Usuario> buscarPorIdEquipo(String idEquipo);
 }

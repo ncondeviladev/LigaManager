@@ -7,13 +7,11 @@ import java.util.Objects;
 // Solo contiene la información esencial: quién marcó y en qué minuto.
 public class Gol {
 
-    // ID del jugador que marcó el gol (ej: "P0123")
     private final String jugadorId;
 
-    // Minuto en el que se marcó el gol
     private final int minuto;
 
-    // Constructor
+    
     public Gol(String jugadorId, int minuto) {
         this.jugadorId = jugadorId;
         this.minuto = minuto;
