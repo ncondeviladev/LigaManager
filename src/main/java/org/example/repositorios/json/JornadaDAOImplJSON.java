@@ -2,7 +2,8 @@ package org.example.repositorios.json;
 
 import org.example.modelos.competicion.Jornada;
 import org.example.repositorios.dao.JornadaDAO;
-import org.example.utils.JsonUtils;
+import org.example.utils.dataUtils.JsonUtils;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;

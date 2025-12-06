@@ -2,7 +2,8 @@ package org.example.repositorios.json;
 
 import org.example.modelos.Jugador;
 import org.example.repositorios.dao.JugadorDAO;
-import org.example.utils.JsonUtils;
+import org.example.utils.dataUtils.JsonUtils;
+
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;

@@ -1,4 +1,4 @@
-package org.example.utils;
+package org.example.utils.dataUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.example.utils.dataUtils.DataAccessException;
 
 /**
  * Clase de utilidad para leer listas desde archivos JSON.
@@ -23,7 +25,7 @@ public class JsonUtils {
      * @param filePath     Ruta al archivo JSON.
      * @param propertyName Nombre de la propiedad que contiene la lista.
      * @param listType     Tipo de la lista (TypeToken).
-     * @return Lista de objetos de tipo T, o lista vacía si hay error.
+     * @return Lista de objetos de tipo T.
      */
     public static <T> List<T> leerListaDesdeJson(String filePath, String propertyName, Type listType) {
         try (FileReader reader = new FileReader(filePath)) {
@@ -34,7 +36,7 @@ public class JsonUtils {
                 return result != null ? result : new ArrayList<>();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new DataAccessException("Error al leer el archivo JSON: " + filePath, e);
         }
         return new ArrayList<>();
     }
@@ -54,7 +56,7 @@ public class JsonUtils {
             jsonObject.add(propertyName, gson.toJsonTree(list));
             gson.toJson(jsonObject, writer);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new DataAccessException("Error al escribir en el archivo JSON: " + filePath, e);
         }
     }
 }
