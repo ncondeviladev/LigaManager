@@ -17,4 +17,6 @@ public interface UsuarioDAO {
     void guardarTodos(List<Usuario> usuarios);
 
     void eliminarPorId(String id);
+
+    Optional<Usuario> buscarPorIdEquipo(String idEquipo);
 }

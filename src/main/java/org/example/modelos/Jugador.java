@@ -11,7 +11,7 @@ public class Jugador {
     private final String id;
     private final String nombre;
     private final Posicion posicion;
-    private final String equipoId;
+    private final String idEquipo;
     private final int ataque;
     private final int defensa;
     private final int pase;
@@ -25,12 +25,12 @@ public class Jugador {
     private double precio;
 
     // Constructor completo
-    public Jugador(String id, String nombre, Posicion posicion, String equipoId,
+    public Jugador(String id, String nombre, Posicion posicion, String idEquipo,
             int ataque, int defensa, int pase, int porteria, int estadoForma, double precio) {
         this.id = id;
         this.nombre = nombre;
         this.posicion = posicion;
-        this.equipoId = equipoId;
+        this.idEquipo = idEquipo;
         this.ataque = ataque;
         this.defensa = defensa;
         this.pase = pase;
@@ -53,8 +53,8 @@ public class Jugador {
         return posicion;
     }
 
-    public String getEquipoId() {
-        return equipoId;
+    public String getIdEquipo() {
+        return idEquipo;
     }
 
     public int getAtaque() {
@@ -107,6 +107,6 @@ public class Jugador {
     @Override
     public String toString() {
         return String.format("Jugador -> ID: %-5s | Nombre: %-25s | Pos: %-10s | EquipoID: %-4s | Precio: %.2f M€",
-                id, nombre, posicion, equipoId, precio);
+                id, nombre, posicion, idEquipo, precio);
     }
 }

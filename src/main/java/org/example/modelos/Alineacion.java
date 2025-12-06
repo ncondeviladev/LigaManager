@@ -9,19 +9,14 @@ import java.util.Objects;
 // en lugar de una lista única de titulares.
 public class Alineacion {
 
-    // La formación táctica (4-4-2, 4-3-3, etc.)
     private Formacion formacion;
 
-    // ID del jugador que juega como portero
     private String portero;
 
-    // Lista de IDs de jugadores que juegan como defensas
     private List<String> defensas;
 
-    // Lista de IDs de jugadores que juegan como medios
     private List<String> medios;
 
-    // Lista de IDs de jugadores que juegan como delanteros
     private List<String> delanteros;
 
     // Constructor vacío necesario para Gson

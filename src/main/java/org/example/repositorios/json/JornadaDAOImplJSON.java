@@ -1,30 +1,24 @@
 package org.example.repositorios.json;
 
-import com.google.gson.Gson;
-
 import org.example.modelos.competicion.Jornada;
 import org.example.repositorios.dao.JornadaDAO;
-import org.example.repositorios.json.wrappers.CompeticionWrapper;
-
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import org.example.utils.JsonUtils;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.lang.reflect.Type;
+import com.google.gson.reflect.TypeToken;
 
 // Implementación de JornadaDAO para persistencia en competicion.json
 // Gestiona todas las jornadas con sus partidos y goles anidados.
 public class JornadaDAOImplJSON implements JornadaDAO {
 
     private final String rutaArchivo;
-    private final Gson gson;
 
     public JornadaDAOImplJSON(String rutaArchivo) {
         this.rutaArchivo = rutaArchivo;
-        this.gson = new Gson();
         verificarArchivo();
     }
 
@@ -37,13 +31,9 @@ public class JornadaDAOImplJSON implements JornadaDAO {
 
     @Override
     public List<Jornada> listarTodas() {
-        try (FileReader reader = new FileReader(rutaArchivo)) {
-            CompeticionWrapper wrapper = gson.fromJson(reader, CompeticionWrapper.class);
-            return wrapper.getJornadas();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        Type tipoLista = new TypeToken<ArrayList<Jornada>>() {
+        }.getType();
+        return JsonUtils.leerListaDesdeJson(rutaArchivo, "jornadas", tipoLista);
     }
 
     @Override
@@ -70,14 +60,7 @@ public class JornadaDAOImplJSON implements JornadaDAO {
 
     @Override
     public void guardarTodas(List<Jornada> jornadas) {
-        try (FileWriter writer = new FileWriter(rutaArchivo)) {
-            // Creamos el wrapper para mantener la estructura del JSON
-            CompeticionWrapper wrapper = new CompeticionWrapper();
-            wrapper.setJornadas(jornadas);
-            gson.toJson(wrapper, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        JsonUtils.escribirListaEnJson(rutaArchivo, "jornadas", jornadas);
     }
 
     @Override
