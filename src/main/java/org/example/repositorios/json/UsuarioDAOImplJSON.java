@@ -44,9 +44,9 @@ public class UsuarioDAOImplJSON implements UsuarioDAO {
     }
 
     @Override
-    public Optional<Usuario> buscarPorNombre(String nombre) {
+    public Optional<Usuario> buscarPorEmail(String email) {
         return listarTodos().stream()
-                .filter(u -> u.getEmail().equalsIgnoreCase(nombre))
+                .filter(u -> u.getEmail().equalsIgnoreCase(email))
                 .findFirst();
     }
 
