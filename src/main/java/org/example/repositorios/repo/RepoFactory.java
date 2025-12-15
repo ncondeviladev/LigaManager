@@ -13,7 +13,7 @@ import org.example.utils.dataUtils.DataAccessException;
  */
 public class RepoFactory {
 
-    private static final String TIPO_ACCESO = "JSON";
+    private static final String tipoAcceso = "JSON";
 
     /**
      * Obtiene la instancia del repositorio configurada.
@@ -22,15 +22,14 @@ public class RepoFactory {
      * @throws DataAccessException Si el tipo de acceso configurado no es válido o
      *                             no está soportado.
      */
-    public static LigaRepo getRepositorio() {
-        switch (TIPO_ACCESO) {
+    public static LigaRepo getRepositorio(String tipoAcceso) {
+        switch (tipoAcceso) {
             case "JSON":
                 return new LigaRepoImplJSON();
             case "SQL":
-                // Futura implementación de SQL
-                throw new DataAccessException("El soporte para SQL aún no está implementado.");
+                return new LigaRepoImplJDBC();
             default:
-                throw new DataAccessException("Tipo de acceso desconocido en configuración: " + TIPO_ACCESO);
+                throw new DataAccessException("Tipo de acceso desconocido en configuración: " + tipoAcceso);
         }
     }
 }
