@@ -1,11 +1,11 @@
 package org.example.vistasycontroladores.vistas.menu;
 
+import org.example.modelos.enums.TipoUsuario;
+import org.example.servicio.EquipoServicio;
 import org.example.servicio.UsuariosServicio;
 import org.example.utils.MenuUtils;
 
 import java.util.Scanner;
-
-import static org.example.servicio.UsuariosServicio.*;
 
 public class Menu {
 
@@ -49,16 +49,30 @@ public class Menu {
 
     // crea usuario con su nombre i contraseña
     private static void crearUsuario() {
-
         System.out.println("=== Crear Usuario ===");
-        System.out.println("Inserta tu nombre de usuario");
-        String nombre = sc.nextLine();
+        System.out.println("Inserta tu email");
+        String gmail = sc.nextLine();
         System.out.println("Inserta tu contraseña");
         String contrasenya = sc.nextLine();
+        System.out.println("Que tipo de usuario quieres crear? (ADMIN / ESTANDAR)");
+        String tipousu = sc.nextLine();
+        tipousu = tipousu.toUpperCase();
+        System.out.println("Con que equipo quiere jugar?");
+        EquipoServicio.mostrarEquipos();
+        System.out.println("ID del equipo deseado:");
+        String idequipo = sc.nextLine();
 
-        UsuariosServicio.crearUsuario(nombre, contrasenya);
-    }
-    
+
+        TipoUsuario tipousu2 = null;
+        if (tipousu.equals("ADMIN")) {
+            tipousu2 = TipoUsuario.ADMIN;
+        } else {
+            tipousu2 = TipoUsuario.ESTANDAR;
+        }
+        UsuariosServicio.crearUsuario(gmail, contrasenya, tipousu2, idequipo);
+        }
+
+
     // borra el usuario que se le indique por el nombre
     private static void borrarUsuario() {
         System.out.println("=== Borrar Usuario ===");
