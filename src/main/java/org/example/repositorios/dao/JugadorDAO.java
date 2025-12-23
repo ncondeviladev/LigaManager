@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface JugadorDAO {
     List<Jugador> listarTodos();
 
-    List<Jugador> buscarPorEquipoId(String equipoId);
+    List<Jugador> buscarPorIdEquipo(String idEquipo);
 
     Optional<Jugador> buscarPorId(String id);
 

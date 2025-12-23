@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'eclipse'
 }
 
 group = 'org.example'
@@ -15,6 +16,7 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     implementation 'com.google.code.gson:gson:2.10.1' // Gson para JSON
+    implementation 'org.postgresql:postgresql:42.7.2' // Driver PostgreSQL
 }
 
 test {

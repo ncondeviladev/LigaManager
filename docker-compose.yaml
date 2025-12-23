@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: ligamanager_postgres
+    environment:
+      POSTGRES_DB: ligamanager
+      POSTGRES_USER: ligamanager
+      POSTGRES_PASSWORD: ligamanager
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+      - ./src/main/resources/data/sql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    restart: unless-stopped
