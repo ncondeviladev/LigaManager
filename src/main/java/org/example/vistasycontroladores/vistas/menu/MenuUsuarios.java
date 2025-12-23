@@ -10,17 +10,16 @@ public class MenuUsuarios {
     Muestra el menú de cada usuario
      */
     public static void mostrarMenuUsuarios(Usuario usuario) {
-        Scanner lector = new Scanner(System.in);
         int opcion;
         do {
-            opcion = MenuUtils.crearMenu("=== LIGA FANTASY ===", "1. Tu Equipo", "2. Mercado", "3. Jornadas", "4. Volver");
+            opcion = MenuUtils.crearMenu("=== LIGA FANTASY ===", "Tu Equipo", "Mercado", "Liga", "Volver");
 
             switch (opcion) {
                 case 1: MenuEquipo.mostrarMenuEquipo(usuario);
 
                 case 2: MenuMercado.mostrarMenuMercado(usuario);
 
-                case 3: MenuJornadas.mostrarMenuJornadas();
+                case 3: MenuLiga.mostrarMenuLiga(usuario);
             }
         } while (opcion != 4);
     }

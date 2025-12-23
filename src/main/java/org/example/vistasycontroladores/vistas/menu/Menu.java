@@ -13,7 +13,7 @@ public class Menu {
 
     //Menu para crear usuario, iniciar sesion, borrar usuario, mostrar usuarios y salir
     public static void mostrarMenu() {
-        int opcion = 0;
+        int opcion;
         do {
             opcion = MenuUtils.crearMenu("=== LIGA FANTASY ===", "Iniciar Sesion", "Mostrar Menu", "Crear Usuarios", "Borrar Usuarios", "Salir");
            switch (opcion) {
@@ -38,16 +38,16 @@ public class Menu {
 
     // muestra todos los usuarios
     private static void mostrarUsuarios() {
-       int opcion = -1;
+       int opcion;
         do {
             System.out.println("=== Usuarios ===");
             UsuariosServicio.mostrarUsuarios();
             System.out.println("0. Salir");
-            sc.nextLine();
+            opcion = sc.nextInt();
         }while (opcion != 0);
     }
 
-    // crea usuario con su nombre i contraseña
+    // crea usuario con su nombre y contraseña
     private static void crearUsuario() {
         System.out.println("=== Crear Usuario ===");
         System.out.println("Inserta tu email");

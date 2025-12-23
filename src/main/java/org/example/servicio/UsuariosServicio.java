@@ -16,10 +16,6 @@ import static org.example.vistasycontroladores.vistas.menu.Menu.sc;
 
 public class UsuariosServicio {
 
-    public static void iniciarSesion (String nombre, String contrasenya){
-
-    }
-
     public static void mostrarUsuarios() {
     }
 
