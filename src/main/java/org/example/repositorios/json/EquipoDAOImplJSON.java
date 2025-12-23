@@ -1,30 +1,25 @@
 package org.example.repositorios.json;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.example.modelos.Equipo;
 import org.example.repositorios.dao.EquipoDAO;
+import org.example.utils.dataUtils.JsonUtils;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import com.google.gson.reflect.TypeToken;
 
 // Implementación de EquipoDAO para persistencia en archivos JSON.
 // Utiliza la librería Gson para serializar y deserializar.
 public class EquipoDAOImplJSON implements EquipoDAO {
 
     private final String rutaArchivo;
-    private final Gson gson;
 
     public EquipoDAOImplJSON(String rutaArchivo) {
         this.rutaArchivo = rutaArchivo;
-        this.gson = new Gson();
         verificarArchivo();
     }
 
@@ -37,15 +32,9 @@ public class EquipoDAOImplJSON implements EquipoDAO {
 
     @Override
     public List<Equipo> listarTodos() {
-        try (FileReader reader = new FileReader(rutaArchivo)) {
-            Type tipoLista = new TypeToken<ArrayList<Equipo>>() {
-            }.getType();
-            List<Equipo> equipos = gson.fromJson(reader, tipoLista);
-            return equipos != null ? equipos : new ArrayList<>();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        Type tipoLista = new TypeToken<ArrayList<Equipo>>() {
+        }.getType();
+        return JsonUtils.leerListaDesdeJson(rutaArchivo, "equipos", tipoLista);
     }
 
     @Override
@@ -65,11 +54,7 @@ public class EquipoDAOImplJSON implements EquipoDAO {
 
     @Override
     public void guardarTodos(List<Equipo> equipos) {
-        try (FileWriter writer = new FileWriter(rutaArchivo)) {
-            gson.toJson(equipos, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        JsonUtils.escribirListaEnJson(rutaArchivo, "equipos", equipos);
     }
 
     @Override

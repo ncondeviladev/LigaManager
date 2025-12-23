@@ -10,11 +10,13 @@ public interface UsuarioDAO {
 
     Optional<Usuario> buscarPorId(String id);
 
-    Optional<Usuario> buscarPorNombre(String nombre);
+    Optional<Usuario> buscarPorEmail(String email);
 
     void guardar(Usuario usuario);
 
     void guardarTodos(List<Usuario> usuarios);
 
     void eliminarPorId(String id);
+
+    Optional<Usuario> buscarPorIdEquipo(String idEquipo);
 }
