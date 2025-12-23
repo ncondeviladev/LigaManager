@@ -23,7 +23,7 @@ public class RepoFactory {
      *                             no está soportado.
      */
     public static LigaRepo getRepositorio(String tipoAcceso) {
-        switch (tipoAcceso) {
+        switch (tipoAcceso.toUpperCase()) {
             case "JSON":
                 return new LigaRepoImplJSON();
             case "SQL":
