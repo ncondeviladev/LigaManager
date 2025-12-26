@@ -3,6 +3,7 @@ package org.example.vistasycontroladores.vistas.menu;
 import org.example.modelos.enums.TipoUsuario;
 import org.example.servicio.EquipoServicio;
 import org.example.servicio.UsuariosServicio;
+import org.example.servicio.AppServicio;
 import org.example.utils.MenuUtils;
 
 import java.util.Scanner;
@@ -33,7 +34,7 @@ public class Menu {
         System.out.println("Inserta tu contraseña de usuario");
         String contrasenya = sc.nextLine();
 
-        UsuariosServicio.iniciarSesion(nombre, contrasenya);
+        AppServicio.login(nombre, contrasenya);
     }
 
     // muestra todos los usuarios
@@ -69,7 +70,7 @@ public class Menu {
         } else {
             tipousu2 = TipoUsuario.ESTANDAR;
         }
-        UsuariosServicio.crearUsuario(gmail, contrasenya, tipousu2, idequipo);
+        AppServicio.crearUsuario(gmail, contrasenya, tipousu2, idequipo);
         }
 
 
