@@ -8,6 +8,7 @@ import org.example.repositorios.repo.LigaRepo;
 import org.example.repositorios.repo.RepoFactory;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public class EquipoServicio {
@@ -16,15 +17,14 @@ public class EquipoServicio {
 
     // DAOs instanciados al inicio para uso en toda la clase
     private static final EquipoDAO equipoDAO = repo.getEquipoDAO();
+    private static final UsuarioDAO usuarioDAO = repo.getUsuarioDAO();
 
     //Debe mostrar una lista de los equipos junto a sus IDs
     public static void mostrarEquipos(){
 
-        LigaRepo ligarepo = RepoFactory.getRepositorio("JSON");
+        List<Usuario> listausu = usuarioDAO.listarTodos();
 
-        List<Usuario> listausu = ligarepo.getUsuarioDAO().listarTodos();
-
-        List<Equipo> listaequ = ligarepo.getEquipoDAO().listarTodos();
+        List<Equipo> listaequ = equipoDAO.listarTodos();
 
         for (Equipo e : listaequ) {
             Usuario usuarioAsignado = null;
@@ -48,6 +48,5 @@ public class EquipoServicio {
                 );
             }
         }
-
     }
 }
