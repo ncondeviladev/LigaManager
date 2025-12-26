@@ -76,8 +76,12 @@ public class MenuMercado {
         System.out.print("Introduce el Id del jugador que deseas vender: ");
         Scanner sc = new Scanner(System.in);
         String id = sc.nextLine().toUpperCase();
+        sc.nextLine();
 
-        if (MercadoServicio.venderJugador(usuario, id)) {
+        System.out.print("Introduce el precio al que lo deseas vender: ");
+        double precio = sc.nextDouble();
+
+        if (MercadoServicio.venderJugador(usuario, id, precio)) {
             System.out.println("Jugador puesto en venta");
         } else  {
             System.out.println("El jugador no se ha podido poner en venta");

@@ -77,14 +77,15 @@ public class Menu {
     // borra el usuario que se le indique por el nombre
     private static void borrarUsuario() {
         System.out.println("=== Borrar Usuario ===");
-        System.out.println("Inserta el nombre del usuario que quiere borrar");
+        UsuariosServicio.mostrarUsuarios();
+        System.out.println("Inserta el Id del usuario que quiere borrar");
         String usuario = sc.nextLine();
         System.out.println("Si quieres borrar este usuario definitivamente escribe la palabra *DELETE*");
         String palabra = sc.nextLine();
         if (palabra.equals("DELETE")) {
             UsuariosServicio.borrarUsuario(usuario);
         } else {
-            borrarUsuario();
+            System.out.println("Usuario no borrado");
         }
     }
 

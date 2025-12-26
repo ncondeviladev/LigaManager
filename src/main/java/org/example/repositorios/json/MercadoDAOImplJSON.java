@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import com.google.gson.reflect.TypeToken;
 
@@ -34,6 +35,32 @@ public class MercadoDAOImplJSON implements MercadoDAO {
         Type tipoLista = new TypeToken<ArrayList<Mercado>>() {
         }.getType();
         return JsonUtils.leerListaDesdeJson(rutaArchivo, "mercado", tipoLista);
+    }
+
+    @Override
+    public List<Mercado> listarTodosExceptoPropios(String idUsuario) {
+        Type tipoLista = new TypeToken<ArrayList<Mercado>>() {
+        }.getType();
+        List<Mercado> lista = JsonUtils.leerListaDesdeJson(rutaArchivo, "mercado", tipoLista);
+        for (Mercado mercado : lista) {
+            if (Objects.equals(mercado.getVendedorId(), idUsuario)) {
+                lista.remove(mercado);
+            }
+        }
+        return lista;
+    }
+
+    @Override
+    public List<Mercado> listarPropios(String idUsuario) {
+        Type tipoLista = new TypeToken<ArrayList<Mercado>>() {
+        }.getType();
+        List<Mercado> lista = JsonUtils.leerListaDesdeJson(rutaArchivo, "mercado", tipoLista);
+        for (Mercado mercado : lista) {
+            if (!Objects.equals(mercado.getVendedorId(), idUsuario)) {
+                lista.remove(mercado);
+            }
+        }
+        return lista;
     }
 
     @Override

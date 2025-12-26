@@ -8,6 +8,10 @@ import java.util.Optional;
 public interface MercadoDAO {
     List<Mercado> listarTodos();
 
+    List<Mercado> listarTodosExceptoPropios(String idUsuario);
+
+    List<Mercado> listarPropios(String idUsuario);
+
     Optional<Mercado> buscarPorId(String id);
 
     void guardar(Mercado mercado);
