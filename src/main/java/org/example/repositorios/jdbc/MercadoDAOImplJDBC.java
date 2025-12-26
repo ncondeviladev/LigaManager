@@ -34,6 +34,46 @@ public class MercadoDAOImplJDBC implements MercadoDAO {
     }
 
     @Override
+    public List<Mercado> listarTodosExceptoPropios(String idUsuario) {
+        List<Mercado> ofertas = new ArrayList<>();
+        String sql = "SELECT * FROM mercado where vendedor_id != ?";
+
+        try (Connection conn = ConexionBD.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)){
+             pstmt.setString(1, idUsuario);
+             try (ResultSet rs = pstmt.executeQuery()){
+
+                while (rs.next()) {
+                    ofertas.add(mapResultSetToMercado(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Error al listar ofertas del mercado", e);
+        }
+        return ofertas;
+    }
+
+    @Override
+    public List<Mercado> listarPropios(String idUsuario) {
+        List<Mercado> ofertas = new ArrayList<>();
+        String sql = "SELECT * FROM mercado where vendedor_id = ?";
+
+        try (Connection conn = ConexionBD.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1, idUsuario);
+            try (ResultSet rs = pstmt.executeQuery()){
+
+                while (rs.next()) {
+                    ofertas.add(mapResultSetToMercado(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Error al listar ofertas del mercado", e);
+        }
+        return ofertas;
+    }
+
+    @Override
     public Optional<Mercado> buscarPorId(String id) {
         String sql = "SELECT * FROM mercado WHERE id = ?";
         try (Connection conn = ConexionBD.getConnection();
