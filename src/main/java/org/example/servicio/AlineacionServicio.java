@@ -1,14 +1,28 @@
 package org.example.servicio;
 
 import org.example.modelos.Alineacion;
+import org.example.modelos.Equipo;
 import org.example.modelos.Jugador;
 import org.example.modelos.Usuario;
 import org.example.modelos.enums.Formacion;
+import org.example.modelos.enums.Posicion;
+import org.example.repositorios.dao.EquipoDAO;
+import org.example.repositorios.dao.JugadorDAO;
+import org.example.repositorios.dao.UsuarioDAO;
+import org.example.repositorios.repo.LigaRepo;
+import org.example.repositorios.repo.RepoFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class AlineacionServicio {
+    private static final LigaRepo repo = RepoFactory.getRepositorio("JSON");
+
+    // DAOs instanciados al inicio para uso en toda la clase
+    private static final UsuarioDAO usuarioDAO = repo.getUsuarioDAO();
+    private static final EquipoDAO equipoDAO =  repo.getEquipoDAO();
+
     public static String alineacionATexto(Alineacion alineacion) {
         String formacion = alineacion.getFormacion().toString();
         String portero =  alineacion.getPortero();
@@ -87,7 +101,36 @@ public class AlineacionServicio {
         }
     }
 
+    //comprovar si es portero
     public static boolean cambiarPortero(Usuario usuario, String idPortero) {
+        Optional<Equipo> equipo = equipoDAO.buscarPorId(usuario.getIdEquipo());
+        Alineacion alineacion = usuario.getAlineacion();
+        List<Jugador> jugadores =  JugadorServicio.getAllJugadores();
+
+        // Buscar jugador en la lista
+        Jugador portero = null;
+        for (Jugador j : jugadores) {
+            if (j.getId().equals(idPortero)) {
+                portero = j;
+                break;
+            }
+        }
+
+        // Si no existe el jugador
+        if (portero == null) {
+            System.out.println("No existe un jugador con ese ID.");
+            return false;
+        }
+
+        // Comprobar que es portero
+        if (portero.getPosicion() != Posicion.PORTERO) {
+            System.out.println("El jugador no es portero.");
+            return false;
+        }
+
+        // Cambiar portero
+        alineacion.setPortero(idPortero);
+        return true;
     }
 
     public static int getNumeroDefensas(Usuario usuario) {
