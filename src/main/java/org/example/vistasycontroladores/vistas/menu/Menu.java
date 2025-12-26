@@ -3,6 +3,7 @@ package org.example.vistasycontroladores.vistas.menu;
 import org.example.modelos.enums.TipoUsuario;
 import org.example.servicio.EquipoServicio;
 import org.example.servicio.UsuariosServicio;
+import org.example.servicio.AppServicio;
 import org.example.utils.MenuUtils;
 
 import java.util.Scanner;
@@ -33,7 +34,7 @@ public class Menu {
         System.out.println("Inserta tu contraseña de usuario");
         String contrasenya = sc.nextLine();
 
-        UsuariosServicio.iniciarSesion(nombre, contrasenya);
+        AppServicio.login(nombre, contrasenya);
     }
 
     // muestra todos los usuarios
@@ -69,21 +70,22 @@ public class Menu {
         } else {
             tipousu2 = TipoUsuario.ESTANDAR;
         }
-        UsuariosServicio.crearUsuario(gmail, contrasenya, tipousu2, idequipo);
+        AppServicio.crearUsuario(gmail, contrasenya, tipousu2, idequipo);
         }
 
 
     // borra el usuario que se le indique por el nombre
     private static void borrarUsuario() {
         System.out.println("=== Borrar Usuario ===");
-        System.out.println("Inserta el nombre del usuario que quiere borrar");
+        UsuariosServicio.mostrarUsuarios();
+        System.out.println("Inserta el Id del usuario que quiere borrar");
         String usuario = sc.nextLine();
         System.out.println("Si quieres borrar este usuario definitivamente escribe la palabra *DELETE*");
         String palabra = sc.nextLine();
         if (palabra.equals("DELETE")) {
             UsuariosServicio.borrarUsuario(usuario);
         } else {
-            borrarUsuario();
+            System.out.println("Usuario no borrado");
         }
     }
 
