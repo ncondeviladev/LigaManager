@@ -65,9 +65,10 @@ public class AppServicio {
 
         LigaRepo ligarepo = RepoFactory.getRepositorio("JSON");
 
-        int numusus = ligarepo.getUsuarioDAO().listarTodos().toArray().length;
-        List<Jugador> jugadores = ligarepo.getJugadorDAO().buscarPorIdEquipo(idEquipo);
+        int numusus = ligarepo.getUsuarioDAO().listarTodos().toArray().length -1;
+        String idUsuario = String.format("U%04d", numusus);
 
+        List<Jugador> jugadores = ligarepo.getJugadorDAO().buscarPorIdEquipo(idEquipo);
 
         String portero = null;
         for (Jugador jugador : jugadores) {
@@ -109,7 +110,7 @@ public class AppServicio {
 
         String contrasenya = SeguridadUtils.hashPassword(password);
 
-        Usuario usuario = new Usuario(String.valueOf(numusus), email, contrasenya, tipoUsuario, 100000.0, alineacionnew, idEquipo);
+        Usuario usuario = new Usuario(idUsuario, email, contrasenya, tipoUsuario, 100000.0, alineacionnew, idEquipo);
 
         usuarioDAO.guardar(usuario);
     }
