@@ -11,7 +11,7 @@ public class Jugador {
     private final String id;
     private final String nombre;
     private final Posicion posicion;
-    private final String idEquipo;
+    private String idEquipo;
     private final int ataque;
     private final int defensa;
     private final int pase;
@@ -87,6 +87,10 @@ public class Jugador {
 
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+
+    public void setIdEquipo(String idEquipo) {
+        this.idEquipo = idEquipo;
     }
 
     @Override
