@@ -21,4 +21,7 @@ public class JugadorServicio {
     public static List<Jugador> getAllJugadoresfromEquipo(String idEquipo) {
         return jugadorDAO.buscarPorIdEquipo(idEquipo);
     }
+    public static List<Jugador> getAllJugadores() {
+        return jugadorDAO.listarTodos();
+    }
 }
