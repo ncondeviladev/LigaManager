@@ -42,11 +42,8 @@ public class MercadoDAOImplJSON implements MercadoDAO {
         Type tipoLista = new TypeToken<ArrayList<Mercado>>() {
         }.getType();
         List<Mercado> lista = JsonUtils.leerListaDesdeJson(rutaArchivo, "mercado", tipoLista);
-        for (Mercado mercado : lista) {
-            if (Objects.equals(mercado.getVendedorId(), idUsuario)) {
-                lista.remove(mercado);
-            }
-        }
+        //Corregido: no se puede borrar directamente sobre un bucle, debe usarse removeIf con lambda
+        lista.removeIf(mercado -> Objects.equals(mercado.getVendedorId(), idUsuario));
         return lista;
     }
 
@@ -55,11 +52,8 @@ public class MercadoDAOImplJSON implements MercadoDAO {
         Type tipoLista = new TypeToken<ArrayList<Mercado>>() {
         }.getType();
         List<Mercado> lista = JsonUtils.leerListaDesdeJson(rutaArchivo, "mercado", tipoLista);
-        for (Mercado mercado : lista) {
-            if (!Objects.equals(mercado.getVendedorId(), idUsuario)) {
-                lista.remove(mercado);
-            }
-        }
+        //Corregido: no se puede borrar directamente sobre un bucle, debe usarse removeIf con lambda
+        lista.removeIf(mercado -> !Objects.equals(mercado.getVendedorId(), idUsuario));
         return lista;
     }
 
