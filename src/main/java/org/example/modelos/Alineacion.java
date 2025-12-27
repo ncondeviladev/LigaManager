@@ -1,6 +1,8 @@
 package org.example.modelos;
 
 import org.example.modelos.enums.Formacion;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -73,6 +75,10 @@ public class Alineacion {
 
     public void setDelanteros(List<String> delanteros) {
         this.delanteros = delanteros;
+    }
+
+    public List<String> getJugadores(){
+        return Collections.singletonList(portero + defensas + medios + delanteros);
     }
 
     @Override

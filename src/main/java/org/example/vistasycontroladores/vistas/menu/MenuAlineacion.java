@@ -42,11 +42,9 @@ public class MenuAlineacion {
      */
     private static void cambiarFormacion(Usuario usuario) {
         int opcion;
-        do {
             opcion = MenuUtils.crearMenu("=== TIPO DE FORMACIÓN ===", "4-4-2", "4-3-3", "4-5-1", "3-4-3", "3-5-2");
 
             AlineacionServicio.cambiarFormacion(usuario, opcion);
-        } while (opcion != 4);
     }
 
     /*
