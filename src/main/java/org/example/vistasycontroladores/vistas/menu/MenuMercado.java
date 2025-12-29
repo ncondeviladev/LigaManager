@@ -19,10 +19,11 @@ public class MenuMercado {
 
             switch (opcion) {
                 case 1: jugadoresEnVenta(usuario);
-
+                break;
                 case 2: venderJugador(usuario);
-
+                break;
                 case 3: tusJugadoresEnVenta(usuario);
+                break;
             }
         } while (opcion != 4);
     }

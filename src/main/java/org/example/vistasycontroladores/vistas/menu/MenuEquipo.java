@@ -17,8 +17,9 @@ public class MenuEquipo {
 
             switch (opcion) {
                 case 1: mostrarJugadores(usuario);
-
+                break;
                 case 2: MenuAlineacion.mostrarMenuAlineacion(usuario);
+                break;
             }
         } while (opcion != 3);
     }

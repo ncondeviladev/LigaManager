@@ -2,6 +2,7 @@ package org.example.servicio;
 
 import org.example.modelos.Alineacion;
 import org.example.modelos.Jugador;
+import org.example.modelos.Mercado;
 import org.example.modelos.Usuario;
 import org.example.modelos.enums.Posicion;
 import org.example.modelos.enums.TipoUsuario;
@@ -10,9 +11,7 @@ import org.example.repositorios.repo.LigaRepo;
 import org.example.repositorios.repo.RepoFactory;
 import org.example.utils.SeguridadUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.example.modelos.enums.Formacion.F442;
 
@@ -65,8 +64,25 @@ public class AppServicio {
 
         LigaRepo ligarepo = RepoFactory.getRepositorio("JSON");
 
-        int numusus = ligarepo.getUsuarioDAO().listarTodos().toArray().length -1;
-        String idUsuario = String.format("U%04d", numusus);
+        List<Usuario> usuarios = usuarioDAO.listarTodos();
+
+        Set<Integer> usados = new HashSet<>();
+
+        // Extraer los números usados
+        for (Usuario u : usuarios) {
+            String usuarioId = u.getId();
+            int numero = Integer.parseInt(usuarioId.substring(1));
+            usados.add(numero);
+        }
+
+        // Buscar el primer número libre
+        int nuevoNumero = 1;
+        while (usados.contains(nuevoNumero)) {
+            nuevoNumero++;
+        }
+
+        // Formatear el nuevo ID
+        String idUsuario = String.format("U%04d", nuevoNumero);
 
         List<Jugador> jugadores = ligarepo.getJugadorDAO().buscarPorIdEquipo(idEquipo);
 

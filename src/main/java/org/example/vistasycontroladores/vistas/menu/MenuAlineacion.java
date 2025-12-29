@@ -21,10 +21,11 @@ public class MenuAlineacion {
 
             switch (opcion) {
                 case 1: mostrarAlineacion(usuario);
-
+                break;
                 case 2: cambiarFormacion(usuario);
-
+                break;
                 case 3: cambiarAlineacion(usuario);
+                break;
             }
         } while (opcion != 4);
     }
