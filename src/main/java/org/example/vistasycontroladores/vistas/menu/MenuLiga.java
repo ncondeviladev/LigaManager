@@ -2,6 +2,7 @@ package org.example.vistasycontroladores.vistas.menu;
 
 import org.example.modelos.Usuario;
 import org.example.servicio.LigaServicio;
+import org.example.servicio.SimularPartido;
 import org.example.utils.MenuUtils;
 
 import java.util.Scanner;
@@ -16,24 +17,24 @@ public class MenuLiga {
             opcion = MenuUtils.crearMenu("=== LIGA FANTASY ===", "Clasificación", "Jornadas", "Simular partido", "Volver");
 
             switch (opcion) {
-                case 1: mostrarClasificacion(usuario);
+                case 1: mostrarClasificacion();
 
-                case 2: mostrarJornadas(usuario);
+                case 2: mostrarJornadas();
 
-                case 3: realizarSimulacion(usuario);
+                case 3: realizarSimulacion();
             }
         } while (opcion != 4);
     }
 
-    private static void mostrarClasificacion(Usuario usuario) {
-        System.out.println(LigaServicio.mostrarClasificacion(usuario));
+    private static void mostrarClasificacion() {
+        System.out.println(LigaServicio.mostrarClasificacion());
     }
 
-    private static void mostrarJornadas(Usuario usuario) {
-        System.out.println(LigaServicio.mostrarJornadas(usuario));
+    private static void mostrarJornadas() {
+        System.out.println(LigaServicio.mostrarJornadas());
     }
 
-    private static void realizarSimulacion(Usuario usuario) {
-        LigaServicio.realizarSimulacion(usuario);
+    private static void realizarSimulacion() {
+        LigaServicio.realizarSimulacion();
     }
 }
