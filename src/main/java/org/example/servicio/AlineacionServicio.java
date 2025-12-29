@@ -1,7 +1,6 @@
 package org.example.servicio;
 
 import org.example.modelos.Alineacion;
-import org.example.modelos.Equipo;
 import org.example.modelos.Jugador;
 import org.example.modelos.Usuario;
 import org.example.modelos.enums.Formacion;
@@ -109,6 +108,8 @@ public class AlineacionServicio {
             case 4 -> alineacion.setFormacion(Formacion.F343);
             case 5 -> alineacion.setFormacion(Formacion.F352);
         }
+        usuarioDAO.guardar(usuario);
+
     }
 
     /**
@@ -125,18 +126,17 @@ public class AlineacionServicio {
 
                 // Verificar posición
                 if (j.getPosicion() != Posicion.PORTERO) {
-                    System.out.println("El jugador no es portero.");
                     return false;
                 }
 
                 // Asignar portero
                 alineacion.setPortero(idPortero);
+                usuarioDAO.guardar(usuario);
                 return true;
             }
         }
 
         // No existe jugador con ese id
-        System.out.println("No existe un jugador con ese ID.");
         return false;
     }
 
@@ -173,6 +173,7 @@ public class AlineacionServicio {
         if (defensasValidas.isEmpty()) return false;
 
         alineacion.setDefensas(defensasValidas);
+        usuarioDAO.guardar(usuario);
         return true;
     }
 
@@ -207,6 +208,7 @@ public class AlineacionServicio {
         if (mediosValidos.isEmpty()) return false;
 
         alineacion.setMedios(mediosValidos);
+        usuarioDAO.guardar(usuario);
         return true;
     }
 
@@ -241,6 +243,7 @@ public class AlineacionServicio {
         if (delanterosValidos.isEmpty()) return false;
 
         alineacion.setDelanteros(delanterosValidos);
+        usuarioDAO.guardar(usuario);
         return true;
     }
 }

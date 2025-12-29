@@ -20,16 +20,23 @@ public class EquipoServicio {
     private static final UsuarioDAO usuarioDAO = repo.getUsuarioDAO();
 
     //Debe mostrar una lista de los equipos junto a sus IDs
-    public static void mostrarEquipos(){
+    public static String mostrarEquipos() {
 
-        List<Usuario> listausu = usuarioDAO.listarTodos();
+        List<Usuario> listaUsuarios = usuarioDAO.listarTodos();
+        List<Equipo> listaEquipos = equipoDAO.listarTodos();
 
-        List<Equipo> listaequ = equipoDAO.listarTodos();
+        StringBuilder sb = new StringBuilder();
 
-        for (Equipo e : listaequ) {
+        // Cabecera de la tabla
+        sb.append(String.format("%-20s %-25s %-5s%n", "EQUIPO", "USUARIO", "ID"));
+        sb.append("-----------------------------------------------------------\n");
+
+        // Contenido de la tabla
+        for (Equipo e : listaEquipos) {
             Usuario usuarioAsignado = null;
 
-            for (Usuario u : listausu) {
+            // Buscar usuario asignado al equipo
+            for (Usuario u : listaUsuarios) {
                 if (u.getIdEquipo() == e.getId()) {
                     usuarioAsignado = u;
                     break;
@@ -37,16 +44,22 @@ public class EquipoServicio {
             }
 
             if (usuarioAsignado != null) {
-                System.out.println(
-                        "Equipo: " + e.getNombre() +
-                                " | Usuario: " + usuarioAsignado.getEmail() +
-                                " (ID: " + usuarioAsignado.getId() + ")"
-                );
+                sb.append(String.format(
+                        "%-20s %-25s %-5d%n",
+                        e.getNombre(),
+                        usuarioAsignado.getEmail(),
+                        usuarioAsignado.getId()
+                ));
             } else {
-                System.out.println(
-                        "Equipo: " + e.getNombre() + " | Usuario: Sin asignar"
-                );
+                sb.append(String.format(
+                        "%-20s %-25s %-5s%n",
+                        e.getNombre(),
+                        "Sin asignar",
+                        "-"
+                ));
             }
         }
+
+        return sb.toString();
     }
 }

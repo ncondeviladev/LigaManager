@@ -42,7 +42,7 @@ public class Menu {
        int opcion;
         do {
             System.out.println("=== Usuarios ===");
-            UsuariosServicio.mostrarUsuarios();
+            System.out.println(UsuariosServicio.mostrarUsuarios());
             System.out.println("0. Salir");
             opcion = sc.nextInt();
         }while (opcion != 0);
@@ -77,7 +77,7 @@ public class Menu {
     // borra el usuario que se le indique por el nombre
     private static void borrarUsuario() {
         System.out.println("=== Borrar Usuario ===");
-        UsuariosServicio.mostrarUsuarios();
+        System.out.println(UsuariosServicio.mostrarUsuarios());
         System.out.println("Inserta el Id del usuario que quiere borrar");
         String usuario = sc.nextLine();
         System.out.println("Si quieres borrar este usuario definitivamente escribe la palabra *DELETE*");

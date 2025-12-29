@@ -16,26 +16,38 @@ public class UsuariosServicio {
     // DAOs instanciados al inicio para uso en toda la clase
     private static final UsuarioDAO usuarioDAO = repo.getUsuarioDAO();
 
-    public static void mostrarUsuarios() {
+    public static String mostrarUsuarios() {
 
         LigaRepo ligarepo = RepoFactory.getRepositorio("JSON");
+        List<Usuario> listaUsuarios = ligarepo.getUsuarioDAO().listarTodos();
+        List<Equipo> listaEquipos = ligarepo.getEquipoDAO().listarTodos();
+        StringBuilder sb = new StringBuilder();
 
-        List<Usuario> listausu = ligarepo.getUsuarioDAO().listarTodos();
+        // Cabecera de la tabla
+        sb.append(String.format("%-5s %-25s %-20s%n", "ID", "EMAIL", "EQUIPO"));
+        sb.append("----------------------------------------------------------\n");
 
-        List<Equipo> listaequ = ligarepo.getEquipoDAO().listarTodos();
-
-        for (Usuario u : listausu) {
+        // Contenido de la tabla
+        for (Usuario u : listaUsuarios) {
             String nombreEquipo = "Sin equipo";
 
-            for (Equipo e : listaequ) {
+            // Buscar nombre del equipo por id
+            for (Equipo e : listaEquipos) {
                 if (e.getId() == u.getIdEquipo()) {
                     nombreEquipo = e.getNombre();
                     break;
                 }
             }
 
-            System.out.println("ID: " + u.getId() + " | " + u.getEmail() + " - " + nombreEquipo);
+            sb.append(String.format(
+                    "%-5d %-25s %-20s%n",
+                    u.getId(),
+                    u.getEmail(),
+                    nombreEquipo
+            ));
         }
+
+        return sb.toString();
     }
 
     public static void borrarUsuario(String usuario) {
