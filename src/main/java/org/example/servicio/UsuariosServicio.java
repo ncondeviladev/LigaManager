@@ -7,6 +7,7 @@ import org.example.repositorios.repo.LigaRepo;
 import org.example.repositorios.repo.RepoFactory;
 
 import java.util.List;
+import java.util.Objects;
 
 
 public class UsuariosServicio {
@@ -33,14 +34,14 @@ public class UsuariosServicio {
 
             // Buscar nombre del equipo por id
             for (Equipo e : listaEquipos) {
-                if (e.getId() == u.getIdEquipo()) {
+                if (Objects.equals(e.getId(), u.getIdEquipo())) {
                     nombreEquipo = e.getNombre();
                     break;
                 }
             }
 
             sb.append(String.format(
-                    "%-5d %-25s %-20s%n",
+                    "%-5s %-25s %-20s%n",
                     u.getId(),
                     u.getEmail(),
                     nombreEquipo

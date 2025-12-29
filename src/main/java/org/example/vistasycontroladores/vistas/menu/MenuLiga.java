@@ -18,10 +18,11 @@ public class MenuLiga {
 
             switch (opcion) {
                 case 1: mostrarClasificacion();
-
+                break;
                 case 2: mostrarJornadas();
-
+                break;
                 case 3: realizarSimulacion();
+                break;
             }
         } while (opcion != 4);
     }

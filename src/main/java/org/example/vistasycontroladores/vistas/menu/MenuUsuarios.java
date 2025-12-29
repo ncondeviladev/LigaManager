@@ -16,10 +16,11 @@ public class MenuUsuarios {
 
             switch (opcion) {
                 case 1: MenuEquipo.mostrarMenuEquipo(usuario);
-
+                break;
                 case 2: MenuMercado.mostrarMenuMercado(usuario);
-
+                break;
                 case 3: MenuLiga.mostrarMenuLiga(usuario);
+                break;
             }
         } while (opcion != 4);
     }

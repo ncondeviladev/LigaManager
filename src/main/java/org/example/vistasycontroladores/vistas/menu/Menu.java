@@ -1,11 +1,13 @@
 package org.example.vistasycontroladores.vistas.menu;
 
+import org.example.modelos.Usuario;
 import org.example.modelos.enums.TipoUsuario;
 import org.example.servicio.EquipoServicio;
 import org.example.servicio.UsuariosServicio;
 import org.example.servicio.AppServicio;
 import org.example.utils.MenuUtils;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Menu {
@@ -16,52 +18,77 @@ public class Menu {
     public static void mostrarMenu() {
         int opcion;
         do {
-            opcion = MenuUtils.crearMenu("=== LIGA FANTASY ===", "Iniciar Sesion", "Mostrar Menu", "Crear Usuarios", "Borrar Usuarios", "Salir");
+            opcion = MenuUtils.crearMenu("=== LIGA FANTASY ===", "Iniciar Sesión", "Mostrar Usuarios", "Crear Usuario", "Borrar Usuario", "Salir");
            switch (opcion) {
                case 1: iniciarSesion();
+               break;
                case 2: mostrarUsuarios();
+               break;
                case 3: crearUsuario();
+               break;
                case 4: borrarUsuario();
+               break;
            }
         } while (opcion != 5);
     }
     // Inicia la sesion en el usuario que se le diga con su contraseña
     private static void iniciarSesion() {
-
-        System.out.println("=== Iniciar Sesion ===");
-        System.out.println("Inserta tu nombre de usuario");
+        while (sc.hasNextLine()) {
+            sc.nextLine();
+        }
+        System.out.println("=== INICIAR SESIÓN ===");
+        System.out.println("Inserta tu email");
         String nombre = sc.nextLine();
-        System.out.println("Inserta tu contraseña de usuario");
+        while (sc.hasNextLine()) {
+            sc.nextLine();
+        }
+        System.out.println("Inserta tu contraseña");
         String contrasenya = sc.nextLine();
+        while (sc.hasNextLine()) {
+            sc.nextLine();
+        }
 
-        AppServicio.login(nombre, contrasenya);
+        Optional<Usuario> usuario = AppServicio.login(nombre, contrasenya);
+        if (usuario.isPresent()) {
+            MenuUsuarios.mostrarMenuUsuarios(usuario.get());
+        }
     }
 
     // muestra todos los usuarios
     private static void mostrarUsuarios() {
-       int opcion;
-        do {
-            System.out.println("=== Usuarios ===");
+            System.out.println("=== USUARIOS ===");
             System.out.println(UsuariosServicio.mostrarUsuarios());
-            System.out.println("0. Salir");
-            opcion = sc.nextInt();
-        }while (opcion != 0);
     }
 
     // crea usuario con su nombre y contraseña
     private static void crearUsuario() {
-        System.out.println("=== Crear Usuario ===");
+        while (sc.hasNextLine()) {
+            sc.nextLine();
+        }
+        System.out.println("=== CREAR USUARIO ===");
         System.out.println("Inserta tu email");
         String gmail = sc.nextLine();
+        while (sc.hasNextLine()) {
+            sc.nextLine();
+        }
         System.out.println("Inserta tu contraseña");
         String contrasenya = sc.nextLine();
+        while (sc.hasNextLine()) {
+            sc.nextLine();
+        }
         System.out.println("Que tipo de usuario quieres crear? (ADMIN / ESTANDAR)");
         String tipousu = sc.nextLine();
+        while (sc.hasNextLine()) {
+            sc.nextLine();
+        }
         tipousu = tipousu.toUpperCase();
         System.out.println("Con que equipo quiere jugar?");
         EquipoServicio.mostrarEquipos();
         System.out.println("ID del equipo deseado:");
         String idequipo = sc.nextLine();
+        while (sc.hasNextLine()) {
+            sc.nextLine();
+        }
 
 
         TipoUsuario tipousu2 = null;
@@ -76,12 +103,22 @@ public class Menu {
 
     // borra el usuario que se le indique por el nombre
     private static void borrarUsuario() {
-        System.out.println("=== Borrar Usuario ===");
+        while (sc.hasNextLine()) {
+            sc.nextLine();
+        }
+        System.out.println("=== BORRAR USUARIO ===");
         System.out.println(UsuariosServicio.mostrarUsuarios());
         System.out.println("Inserta el Id del usuario que quiere borrar");
         String usuario = sc.nextLine();
+        while (sc.hasNextLine()) {
+            sc.nextLine();
+        }
         System.out.println("Si quieres borrar este usuario definitivamente escribe la palabra *DELETE*");
         String palabra = sc.nextLine();
+        palabra = palabra.toUpperCase();
+        while (sc.hasNextLine()) {
+            sc.nextLine();
+        }
         if (palabra.equals("DELETE")) {
             UsuariosServicio.borrarUsuario(usuario);
         } else {
