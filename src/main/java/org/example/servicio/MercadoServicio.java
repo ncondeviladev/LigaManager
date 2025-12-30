@@ -26,7 +26,7 @@ public class MercadoServicio {
     public static int comprarJugador(Usuario usuario, String id) {
         try {
             //Comprueba que el jugador no lo este vendiendo el propio usuario
-            if (mercadoDAO.buscarPorId(id) != null && !mercadoDAO.buscarPorId(id).get().getVendedorId().equals(usuario.getId())) {
+            if (mercadoDAO.buscarPorId(id).isPresent() && !mercadoDAO.buscarPorId(id).get().getVendedorId().equals(usuario.getId())) {
                 //Comprueba que el usuario tenga saldo suficiente
                 if (usuario.getSaldo() >= mercadoDAO.buscarPorId(id).get().getPrecioVenta()) {
                     //Comprueba que el equipo del comprador no este lleno
@@ -34,12 +34,14 @@ public class MercadoServicio {
                         return 2;
                     } else {
                         usuario.setSaldo(usuario.getSaldo() - mercadoDAO.buscarPorId(id).get().getPrecioVenta());
-                        Usuario vendedor = usuarioDAO.buscarPorId(mercadoDAO.buscarPorId(id).get().getVendedorId()).get();
-                        vendedor.setSaldo(vendedor.getSaldo() + mercadoDAO.buscarPorId(id).get().getPrecioVenta());
+                        if (usuarioDAO.buscarPorId(mercadoDAO.buscarPorId(id).get().getVendedorId()).isPresent()) {
+                            Usuario vendedor = usuarioDAO.buscarPorId(mercadoDAO.buscarPorId(id).get().getVendedorId()).get();
+                            vendedor.setSaldo(vendedor.getSaldo() + mercadoDAO.buscarPorId(id).get().getPrecioVenta());
+                            usuarioDAO.guardar(vendedor);
+                        }
                         Jugador jugador = jugadorDAO.buscarPorId(mercadoDAO.buscarPorId(id).get().getJugadorId()).get();
                         jugador.setIdEquipo(usuario.getIdEquipo());
                         jugadorDAO.guardar(jugador);
-                        usuarioDAO.guardar(vendedor);
                         usuarioDAO.guardar(usuario);
                         mercadoDAO.eliminarPorId(id);
                         return 1;
@@ -52,8 +54,12 @@ public class MercadoServicio {
     }
 
 
-    public static boolean venderJugador(Usuario usuario, String id, double precio) {
+    public static int venderJugador(Usuario usuario, String id, double precio) {
         List<Mercado> mercados = mercadoDAO.listarTodos();
+
+        if (jugadorDAO.buscarPorId(id).isEmpty()) {
+            return 3;
+        }
 
         Set<Integer> usados = new HashSet<>();
 
@@ -75,25 +81,27 @@ public class MercadoServicio {
 
         try {
             //Comprueba que el jugador sea propiedad del usuario que quiere venderlo y que el precio no sea negativo
-            if (Objects.equals(usuario.getIdEquipo(), jugadorDAO.buscarPorId(id).get().getIdEquipo()) && precio >= 0) {
-                //Comprueba que el jugador que quieres vender no este actualmente en tu alineación
-                for (Jugador jugador : jugadorDAO.buscarPorIdEquipo(usuario.getIdEquipo())) {
-                    for (String idJugador : usuario.getAlineacion().getJugadores()) {
-                        if (jugador.getId().equals(idJugador)) {
-                            return false;
+            if (Objects.equals(usuario.getIdEquipo(), jugadorDAO.buscarPorId(id).get().getIdEquipo())) {
+                if (precio >= 0) {
+                    //Comprueba que el jugador que quieres vender no este actualmente en tu alineación
+                    for (Jugador jugador : jugadorDAO.buscarPorIdEquipo(usuario.getIdEquipo())) {
+                        for (String idJugador : usuario.getAlineacion().getJugadores()) {
+                            if (jugador.getId().equals(idJugador)) {
+                                return 2;
+                            }
                         }
                     }
-                }
-                Mercado mercado = new Mercado(nuevoId, id, usuario.getId(), precio);
-                mercadoDAO.guardar(mercado);
-                Jugador jugador = jugadorDAO.buscarPorId(id).get();
-                jugador.setIdEquipo("T00");
-                jugadorDAO.guardar(jugador);
-                return true;
-            } else return false;
+                    Mercado mercado = new Mercado(nuevoId, id, usuario.getId(), precio);
+                    mercadoDAO.guardar(mercado);
+                    Jugador jugador = jugadorDAO.buscarPorId(id).get();
+                    jugador.setIdEquipo("T00");
+                    jugadorDAO.guardar(jugador);
+                    return 0;
+                } else return 4;
+            } else return 1;
 
         } catch (RuntimeException e) {
-            return false;
+            return 5;
         }
     }
 

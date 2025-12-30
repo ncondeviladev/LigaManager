@@ -9,6 +9,7 @@ import java.util.Scanner;
 //Esta clase muestra el menú del mercado que nos permite comprar y vender jugadores
 public class MenuMercado {
 
+    public static Scanner sc = new Scanner(System.in);
     /*
     Muestra el menu del mercado
      */
@@ -36,14 +37,13 @@ public class MenuMercado {
         System.out.println(MercadoServicio.jugadoresEnVenta(usuario));
 
         System.out.println("¿Deseas comprar alguno? (SÍ/NO)");
-        Scanner sc = new Scanner(System.in);
+
         String opcion = sc.nextLine();
         opcion = opcion.toLowerCase();
 
         if  (opcion.equals("si") || opcion.equals("sí")) {
             comprarJugador(usuario);
         }
-        sc.close();
     }
 
     /*
@@ -51,20 +51,19 @@ public class MenuMercado {
      */
     private static void comprarJugador(Usuario usuario) {
         System.out.print("Introduce el Id del jugador que deseas comprar: ");
-        Scanner sc = new Scanner(System.in);
         String id = sc.nextLine().toUpperCase();
 
         switch (MercadoServicio.comprarJugador(usuario, id)) {
 
             case 1: System.out.println("Jugador comprado");
-
+            break;
             case 2: System.out.println("Jugador no comprado debido a que tu equipo está lleno");
-
+            break;
             case 3: System.out.println("Jugador no comprado debido a que este jugador no existe o no está en venta");
-
+            break;
             case 4: System.out.println("Jugador no comprado debido a que el saldo es insuficiente");
+            break;
         }
-        sc.close();
     }
 
     /*
@@ -75,19 +74,26 @@ public class MenuMercado {
         MenuEquipo.mostrarJugadores(usuario);
         System.out.println();
         System.out.print("Introduce el Id del jugador que deseas vender: ");
-        Scanner sc = new Scanner(System.in);
         String id = sc.nextLine().toUpperCase();
-        sc.nextLine();
 
         System.out.print("Introduce el precio al que lo deseas vender: ");
         double precio = sc.nextDouble();
+        sc.nextLine();
 
-        if (MercadoServicio.venderJugador(usuario, id, precio)) {
-            System.out.println("Jugador puesto en venta");
-        } else  {
-            System.out.println("El jugador no se ha podido poner en venta");
+        switch (MercadoServicio.venderJugador(usuario, id, precio)) {
+
+            case 0: System.out.println("Jugador puesto en venta");
+            break;
+            case 1: System.out.println("Jugador no puesto en venta debido a que no tienes este jugador en tu equipo");
+            break;
+            case 2: System.out.println("Jugador no puesto en venta debido a que está en tu alineación");
+            break;
+            case 3: System.out.println("Jugador no puesto en venta debido a que no existe");
+            break;
+            case 4: System.out.println("Jugador no puesto en venta debido a que el precio no puede ser negativo");
+            break;
+            case 5: System.out.println("Jugador no puesto en venta");
         }
-        sc.close();
     }
 
     /*
