@@ -8,6 +8,7 @@ import org.example.modelos.competicion.Jornada;
 import org.example.repositorios.dao.*;
 import org.example.repositorios.repo.LigaRepo;
 import org.example.repositorios.repo.RepoFactory;
+import org.example.utils.TextTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,63 +26,92 @@ public class LigaServicio {
     private static final JugadorDAO jugadorDAO = repo.getJugadorDAO();
     private static final JornadaDAO jornadaDAO  = repo.getJornadaDAO();
 
-    public static List<Equipo> mostrarClasificacion() {
+    public static String mostrarClasificacion() {
 
         // Lista donde se almacenará la clasificación final ordenada
         List<Equipo> clasificacion = new ArrayList<>();
 
         // Se obtienen todos los equipos desde la base de datos
-        List<Equipo> equipos = equipoDAO.listarTodos();
+        List<Equipo> equipos = new ArrayList<>(equipoDAO.listarTodos());
 
-        // Mientras la clasificación no tenga los 20 equipos
-        while (clasificacion.size() != 20) {
+        // Ordenar manualmente los equipos según puntos, diferencia de goles y GF
+        while (clasificacion.size() != 20 && !equipos.isEmpty()) {
 
-            // Se toma el primer equipo como referencia inicial
             Equipo equipoGuardado = equipos.get(0);
 
-            // Se recorren todos los equipos para encontrar el mejor
             for (Equipo equipo : equipos) {
-
-                // Si el equipo actual tiene más puntos que el guardado
                 if (equipo.getPuntos() > equipoGuardado.getPuntos()) {
                     equipoGuardado = equipo;
-
-                } else {
-
-                    // Si tienen los mismos puntos
-                    if (equipo.getPuntos() == equipoGuardado.getPuntos()) {
-
-                        // Se compara la diferencia de goles (GF - GC)
-                        if (equipo.getGf() - equipo.getGc() > equipoGuardado.getGf() - equipoGuardado.getGc()) {
+                } else if (equipo.getPuntos() == equipoGuardado.getPuntos()) {
+                    int diffGoles = equipo.getGf() - equipo.getGc();
+                    int diffGolesGuardado = equipoGuardado.getGf() - equipoGuardado.getGc();
+                    if (diffGoles > diffGolesGuardado) {
+                        equipoGuardado = equipo;
+                    } else if (diffGoles == diffGolesGuardado) {
+                        if (equipo.getGf() > equipoGuardado.getGf()) {
                             equipoGuardado = equipo;
-
-                        } else {
-
-                            // Si también empatan en diferencia de goles
-                            if (equipo.getGf() - equipo.getGc() == equipoGuardado.getGf() - equipoGuardado.getGc()) {
-
-                                // Se compara el número total de goles a favor
-                                if (equipo.getGf() > equipoGuardado.getGf()) {
-                                    equipoGuardado = equipo;
-                                }
-                            }
                         }
                     }
                 }
             }
-            // Se elimina el equipo seleccionado de la lista de equipos
-            equipos.remove(equipoGuardado);
 
-            // Se añade el mejor equipo encontrado a la clasificación
+            equipos.remove(equipoGuardado);
             clasificacion.add(equipoGuardado);
         }
 
-        // Se devuelve la clasificación completa
-        return clasificacion;
+        // Crear tabla con cabeceras
+        TextTable table = new TextTable(1,
+                "POS", "EQUIPO", "PUNTOS", "GF", "GC");
+
+        table.setAlign("POS", TextTable.Align.RIGHT);
+        table.setAlign("PUNTOS", TextTable.Align.RIGHT);
+        table.setAlign("GF", TextTable.Align.RIGHT);
+        table.setAlign("GC", TextTable.Align.RIGHT);
+
+        // Añadir filas con la clasificación
+        int posicion = 1;
+        for (Equipo e : clasificacion) {
+            table.addRow(
+                    String.valueOf(posicion),
+                    e.getNombre(),
+                    String.valueOf(e.getPuntos()),
+                    String.valueOf(e.getGf()),
+                    String.valueOf(e.getGc())
+            );
+            posicion++;
+        }
+
+        return table.toString();
     }
 
-    public static List<Jornada> mostrarJornadas() {
-        return jornadaDAO.listarTodas();
+
+    public static String mostrarJornadas() {
+
+        List<Jornada> jornadas = jornadaDAO.listarTodas();
+
+        // Crear tabla con cabeceras
+        TextTable table = new TextTable(1,
+                "JORNADA", "ID", "PARTIDOS");
+
+        table.setAlign("JORNADA", TextTable.Align.RIGHT);
+        table.setAlign("PARTIDOS", TextTable.Align.RIGHT);
+
+        if (jornadas.isEmpty()) {
+            table.addRow("-", "-", "0");
+            return table.toString();
+        }
+
+        int numeroJornada = 1;
+        for (Jornada j : jornadas) {
+            table.addRow(
+                    String.valueOf(numeroJornada),
+                    j.getId(),
+                    String.valueOf(j.getPartidos().size())
+            );
+            numeroJornada++;
+        }
+
+        return table.toString();
     }
 
     public static void realizarSimulacion() {

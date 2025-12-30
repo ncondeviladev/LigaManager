@@ -9,8 +9,10 @@ import org.example.repositorios.dao.EquipoDAO;
 import org.example.repositorios.dao.UsuarioDAO;
 import org.example.repositorios.repo.LigaRepo;
 import org.example.repositorios.repo.RepoFactory;
+import org.example.utils.TextTable;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 
 public class AlineacionServicio {
 
@@ -26,74 +28,40 @@ public class AlineacionServicio {
      */
     public static String alineacionATexto(Alineacion alineacion) {
 
-        // Datos básicos de la alineación
-        String formacion = alineacion.getFormacion().toString();
-        String portero = alineacion.getPortero();
-
         // Lista completa de jugadores
         List<Jugador> jugadores = JugadorServicio.getAllJugadores();
 
-        // IDs de jugadores por posición
-        List<String> defensas = alineacion.getDefensas();
-        List<String> medios = alineacion.getMedios();
-        List<String> delanteros = alineacion.getDelanteros();
+        // Crear tabla con solo POSICIÓN y NOMBRE
+        TextTable table = new TextTable(1, "POSICIÓN", "NOMBRE");
 
-        StringBuilder sb = new StringBuilder();
+        // Alinear nombre a la izquierda
+        table.setAlign("NOMBRE", TextTable.Align.LEFT);
 
-        // Convertir defensas a texto
-        for (String id : defensas) {
-            for (Jugador j : jugadores) {
-                if (j.getId().equals(id)) {
-                    sb.append(j.getNombre())
-                            .append(" (")
-                            .append(j.getPosicion())
-                            .append("), ");
-                    break;
+        // Función auxiliar para añadir jugadores a la tabla
+        BiConsumer<List<String>, String> addJugadores = (ids, posicion) -> {
+            for (String id : ids) {
+                for (Jugador j : jugadores) {
+                    if (j.getId().equals(id)) {
+                        table.addRow(
+                                posicion,
+                                j.getNombre()
+                        );
+                        break;
+                    }
                 }
             }
-        }
+        };
 
-        String resultadodef = sb.length() > 0 ? sb.substring(0, sb.length() - 2) : "";
-        sb.setLength(0); // limpiar StringBuilder
+        // Añadir jugadores por posición
+        addJugadores.accept(List.of(alineacion.getPortero()), "PORTERO");
+        addJugadores.accept(alineacion.getDefensas(), "DEFENSA");
+        addJugadores.accept(alineacion.getMedios(), "MEDIO");
+        addJugadores.accept(alineacion.getDelanteros(), "DELANTERO");
 
-        // Convertir medios a texto
-        for (String id : medios) {
-            for (Jugador j : jugadores) {
-                if (j.getId().equals(id)) {
-                    sb.append(j.getNombre())
-                            .append(" (")
-                            .append(j.getPosicion())
-                            .append("), ");
-                    break;
-                }
-            }
-        }
-
-        String resultadomed = sb.length() > 0 ? sb.substring(0, sb.length() - 2) : "";
-        sb.setLength(0);
-
-        // Convertir delanteros a texto
-        for (String id : delanteros) {
-            for (Jugador j : jugadores) {
-                if (j.getId().equals(id)) {
-                    sb.append(j.getNombre())
-                            .append(" (")
-                            .append(j.getPosicion())
-                            .append("), ");
-                    break;
-                }
-            }
-        }
-
-        String resultadodel = sb.length() > 0 ? sb.substring(0, sb.length() - 2) : "";
-
-        // Texto final de la alineación
-        return "Formación: " + formacion +
-                "\nPortero: " + portero +
-                "\nDefensas: " + resultadodef +
-                "\nMedios: " + resultadomed +
-                "\nDelanteros: " + resultadodel;
+        // Devolver tabla como String
+        return "Formación: " + alineacion.getFormacion() + "\n" + table.toString();
     }
+
 
     /**
      * Cambia la formación según la opción elegida
