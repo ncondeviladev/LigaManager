@@ -15,10 +15,18 @@ public class MenuUtils {
      */
     public static int crearMenu(String titulo, String... opciones) {
         Scanner sc = Menu.sc;
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < titulo.length(); i++) {
+            sb.append("=");
+        }
+
+        String linea = sb.toString();
+
         while (true) {
-            System.out.println("====================");
+            System.out.println(linea);
             System.out.println(titulo.toUpperCase());
-            System.out.println("====================");
+            System.out.println(linea);
             for (int i = 0; i < opciones.length; i++) {
                 System.out.printf("%d. %s%n", (i + 1), opciones[i]);
             }

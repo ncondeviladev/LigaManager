@@ -13,7 +13,7 @@ import org.example.utils.TextTable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.servicio.GeneradorJornadas.crearJornada;
+import static org.example.servicio.GeneradorJornadas.generarLigaCompleta;
 import static org.example.servicio.SimularJornada.simularJornada;
 
 public class LigaServicio {
@@ -25,6 +25,8 @@ public class LigaServicio {
     private static final MercadoDAO mercadoDAO = repo.getMercadoDAO();
     private static final JugadorDAO jugadorDAO = repo.getJugadorDAO();
     private static final JornadaDAO jornadaDAO  = repo.getJornadaDAO();
+
+    private static int contadorJornadas = 1;
 
     public static String mostrarClasificacion() {
 
@@ -89,35 +91,44 @@ public class LigaServicio {
 
         List<Jornada> jornadas = jornadaDAO.listarTodas();
 
+        // Ordenar por ID de menor a mayor
+        jornadas.sort((j1, j2) -> j1.getId().compareTo(j2.getId()));
+
         // Crear tabla con cabeceras
-        TextTable table = new TextTable(1,
-                "JORNADA", "ID", "PARTIDOS");
+        TextTable table = new TextTable(1, "JORNADA", "ID", "PARTIDOS");
 
         table.setAlign("JORNADA", TextTable.Align.RIGHT);
         table.setAlign("PARTIDOS", TextTable.Align.RIGHT);
 
-        if (jornadas.isEmpty()) {
-            table.addRow("-", "-", "0");
-            return table.toString();
-        }
-
-        int numeroJornada = 1;
         for (Jornada j : jornadas) {
-            table.addRow(
-                    String.valueOf(numeroJornada),
-                    j.getId(),
-                    String.valueOf(j.getPartidos().size())
-            );
-            numeroJornada++;
+            if (j.getPartidos().get(1).getGolesLocal() < 0) {
+                table.addRow("-", "-", "No jugada todavía");
+                return table.toString();
+            } else {
+                table.addRow(
+                        String.valueOf(j.getNumero()),
+                        j.getId(),
+                        String.valueOf(j.getPartidos().size())
+                );
+            }
         }
 
         return table.toString();
     }
 
+
     public static void realizarSimulacion() {
 
-        Jornada nuevaJornada = crearJornada(repo, equipoDAO.listarTodos());
+        List<Jornada> jornadas = generarLigaCompleta(repo, equipoDAO.listarTodos());
 
-        simularJornada(nuevaJornada, jugadorDAO.listarTodos());
+        List<Jugador> jugadores = repo.getJugadorDAO().listarTodos();
+
+        for (Jornada j : jornadas) {
+            if (j.getNumero() == contadorJornadas) {
+                simularJornada(j, jugadores);
+                contadorJornadas++;
+                return;
+            }
+        }
     }
 }

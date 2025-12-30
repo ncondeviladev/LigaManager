@@ -1,9 +1,6 @@
 package org.example.vistasycontroladores.vistas.menu;
 
 import org.example.modelos.Usuario;
-import org.example.repositorios.dao.UsuarioDAO;
-import org.example.repositorios.repo.LigaRepo;
-import org.example.repositorios.repo.RepoFactory;
 import org.example.servicio.AlineacionServicio;
 import org.example.utils.MenuUtils;
 import java.util.ArrayList;
@@ -11,10 +8,6 @@ import java.util.Scanner;
 
 //En esta clase se muestra el menú Alineación que te permite configurarla
 public class MenuAlineacion {
-    private static final LigaRepo repo = RepoFactory.getRepositorio("JSON");
-    private static final UsuarioDAO usuarioDAO = repo.getUsuarioDAO();
-
-
     /*
     Te muestra el menú de tu alineación
      */
@@ -46,24 +39,24 @@ public class MenuAlineacion {
     private static void cambiarAlineacion(Usuario usuario) {
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("Quieres cambiar la formación?(SI/NO)");
+        System.out.println("Quieres cambiar la formación?(SÍ/NO)");
         String respuesta = sc.nextLine().toUpperCase();
 
-        if (respuesta.equals("SI")) {
+        if  (respuesta.equals("SI") || respuesta.equals("SÍ")) {
             cambiarFormacion(usuario);
 
-            usuarioDAO.guardar(usuario);
-
-
             MenuEquipo.mostrarJugadores(usuario);
 
-            boolean cambiado = false;
+            boolean cambiado;
 
             do {
-                System.out.println("Elige el portero:");
+                System.out.print("Elige el portero: ");
                 String idPortero = sc.nextLine();
 
                 cambiado = AlineacionServicio.cambiarPortero(usuario, idPortero);
+                if (cambiado == false) {
+                    System.out.println("No es un portero válido");
+                }
             } while (cambiado == false);
 
             sc.nextLine();
@@ -73,13 +66,16 @@ public class MenuAlineacion {
                 ArrayList<String> defensas = new ArrayList<>();
 
                 for (int i = 0; i < numDefensas; i++) {
-                    System.out.println("Elige un defensa:");
+                    System.out.print("Elige un defensa: ");
                     String idDefensa = sc.nextLine();
                     sc.nextLine();
                     defensas.add(idDefensa);
                 }
 
                 cambiado = AlineacionServicio.cambiarDefensas(usuario, defensas);
+                if (cambiado == false) {
+                    System.out.println("Los defensas no son válidos");
+                }
             } while (cambiado == false);
 
             do {
@@ -87,13 +83,16 @@ public class MenuAlineacion {
                 ArrayList<String> medios = new ArrayList<>();
 
                 for (int i = 0; i < numMedios; i++) {
-                    System.out.println("Elige un medio:");
-                    String idDefensa = sc.nextLine();
+                    System.out.print("Elige un medio: ");
+                    String idMedio = sc.nextLine();
                     sc.nextLine();
-                    medios.add(idDefensa);
+                    medios.add(idMedio);
                 }
 
                 cambiado = AlineacionServicio.cambiarMedios(usuario, medios);
+                if (cambiado == false) {
+                    System.out.println("Los medios no son válidos");
+                }
             } while (cambiado == false);
 
             do {
@@ -101,74 +100,18 @@ public class MenuAlineacion {
                 ArrayList<String> delanteros = new ArrayList<>();
 
                 for (int i = 0; i < numDelanteros; i++) {
-                    System.out.println("Elige un delantero:");
-                    String idDefensa = sc.nextLine();
+                    System.out.print("Elige un delantero: ");
+                    String idDelantero = sc.nextLine();
                     sc.nextLine();
-                    delanteros.add(idDefensa);
+                    delanteros.add(idDelantero);
                 }
 
                 cambiado = AlineacionServicio.cambiarDelanteros(usuario, delanteros);
-            } while (cambiado == false);
-
-            sc.close();
-        } else {
-
-            MenuEquipo.mostrarJugadores(usuario);
-
-            boolean cambiado = false;
-
-            do {
-                System.out.println("Elige el portero:");
-                String idPortero = sc.nextLine();
-
-                cambiado = AlineacionServicio.cambiarPortero(usuario, idPortero);
-            } while (cambiado == false);
-
-            sc.nextLine();
-
-            do {
-                int numDefensas = AlineacionServicio.getNumeroDefensas(usuario);
-                ArrayList<String> defensas = new ArrayList<>();
-
-                for (int i = 0; i < numDefensas; i++) {
-                    System.out.println("Elige un defensa:");
-                    String idDefensa = sc.nextLine();
-                    sc.nextLine();
-                    defensas.add(idDefensa);
+                if (cambiado == false) {
+                    System.out.println("Los delanteros no son válidos");
                 }
-
-                cambiado = AlineacionServicio.cambiarDefensas(usuario, defensas);
             } while (cambiado == false);
 
-            do {
-                int numMedios = AlineacionServicio.getNumeroMedios(usuario);
-                ArrayList<String> medios = new ArrayList<>();
-
-                for (int i = 0; i < numMedios; i++) {
-                    System.out.println("Elige un medio:");
-                    String idDefensa = sc.nextLine();
-                    sc.nextLine();
-                    medios.add(idDefensa);
-                }
-
-                cambiado = AlineacionServicio.cambiarMedios(usuario, medios);
-            } while (cambiado == false);
-
-            do {
-                int numDelanteros = AlineacionServicio.getNumeroDelanteros(usuario);
-                ArrayList<String> delanteros = new ArrayList<>();
-
-                for (int i = 0; i < numDelanteros; i++) {
-                    System.out.println("Elige un delantero:");
-                    String idDefensa = sc.nextLine();
-                    sc.nextLine();
-                    delanteros.add(idDefensa);
-                }
-
-                cambiado = AlineacionServicio.cambiarDelanteros(usuario, delanteros);
-            } while (cambiado == false);
-
-            sc.close();
         }
     }
 

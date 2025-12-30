@@ -80,6 +80,10 @@ public class AppServicio {
         for (Usuario u : usuarios) {
             int numero = Integer.parseInt(u.getId().substring(1));
             usados.add(numero);
+            if (Objects.equals(u.getEmail(), email)) {
+                System.out.println("El usuario existe en el sistema.");
+                return;
+            }
         }
 
         // Buscar el primer número libre

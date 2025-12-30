@@ -1,6 +1,6 @@
 package org.example.servicio;
 
-import org.example.modelos.*;
+import org.example.modelos.Equipo;
 import org.example.modelos.competicion.Jornada;
 import org.example.modelos.competicion.Partido;
 import org.example.repositorios.repo.LigaRepo;
@@ -12,47 +12,104 @@ import java.util.UUID;
 public class GeneradorJornadas {
 
     /**
-     * Crea una nueva jornada y la agrega al repositorio
+     * Genera TODAS las jornadas de una liga completa (ida y vuelta)
      */
-    public static Jornada crearJornada(
-            LigaRepo repo,
-            List<Equipo> equipos) {
+    public static List<Jornada> generarLigaCompleta(LigaRepo repo, List<Equipo> equipos) {
 
-        int numeroJornada = repo.getJornadaDAO().listarTodas().size() + 1;
-        List<Partido> partidos = new ArrayList<>();
+        List<Jornada> jornadas = new ArrayList<>();
 
-        int total = equipos.size();
+        // Copia para no modificar la original
+        List<Equipo> lista = new ArrayList<>(equipos);
 
-        for (int i = 0; i < total / 2; i++) {
+        // Si es impar, añadimos equipo fantasma
+        boolean hayDescanso = lista.size() % 2 != 0;
+        if (hayDescanso) lista.add(null);
 
-            Equipo local = equipos.get(i);
-            Equipo visitante = equipos.get(total - 1 - i);
+        int numEquipos = lista.size();
+        int jornadasIda = numEquipos - 1;
+        int partidosPorJornada = numEquipos / 2;
 
-            String jornadaId = "J" + String.format("%02d", numeroJornada);
-            String partidoId = "PAR" + UUID.randomUUID().toString().substring(0, 4).toUpperCase();
+        int numeroJornada = 1; // Siempre empieza en J01
 
-            Partido partido = new Partido(
-                    partidoId,
-                    jornadaId,
-                    local.getId(),
-                    visitante.getId(),
-                    0,
-                    0,
-                    new ArrayList<>() // goles vacíos
+        // ----- IDA -----
+        for (int j = 0; j < jornadasIda; j++) {
+
+            List<Partido> partidos = new ArrayList<>();
+
+            for (int i = 0; i < partidosPorJornada; i++) {
+                Equipo local = lista.get(i);
+                Equipo visitante = lista.get(numEquipos - 1 - i);
+
+                if (local == null || visitante == null) continue;
+
+                partidos.add(crearPartido(numeroJornada, local, visitante));
+            }
+
+            Jornada jornada = new Jornada(
+                    "J" + String.format("%02d", numeroJornada),
+                    numeroJornada,
+                    partidos
             );
 
-            partidos.add(partido);
+            repo.getJornadaDAO().guardar(jornada);
+            jornadas.add(jornada);
+
+            numeroJornada++;
+            rotarEquipos(lista);
         }
 
-        Jornada nuevaJornada = new Jornada(
-                "J" + String.format("%02d", numeroJornada),
-                numeroJornada,
-                partidos
+        // ----- VUELTA -----
+        int totalJornadas = jornadas.size();
+        for (int j = 0; j < totalJornadas; j++) {
+
+            Jornada ida = jornadas.get(j);
+            List<Partido> partidosVuelta = new ArrayList<>();
+
+            for (Partido p : ida.getPartidos()) {
+
+                Equipo local = repo.getEquipoDAO().buscarPorId(p.getEquipoVisitanteId()).orElseThrow();
+                Equipo visitante = repo.getEquipoDAO().buscarPorId(p.getEquipoLocalId()).orElseThrow();
+
+                partidosVuelta.add(crearPartido(numeroJornada, local, visitante));
+            }
+
+            Jornada vuelta = new Jornada(
+                    "J" + String.format("%02d", numeroJornada),
+                    numeroJornada,
+                    partidosVuelta
+            );
+
+            repo.getJornadaDAO().guardar(vuelta);
+            jornadas.add(vuelta);
+
+            numeroJornada++;
+        }
+
+        return jornadas;
+    }
+
+    // ---- MÉTODOS AUXILIARES ----
+
+    private static Partido crearPartido(int numJornada, Equipo local, Equipo visitante) {
+
+        return new Partido(
+                "PAR" + UUID.randomUUID().toString().substring(0, 6).toUpperCase(),
+                "J" + String.format("%02d", numJornada),
+                local.getId(),
+                visitante.getId(),
+                -1,
+                -1,
+                new ArrayList<>()
         );
+    }
 
-        // Agregar al repositorio
-        repo.getJornadaDAO().guardar(nuevaJornada);
-
-        return nuevaJornada;
+    /**
+     * Rota los equipos manteniendo fijo el primero
+     */
+    private static void rotarEquipos(List<Equipo> equipos) {
+        Equipo fijo = equipos.get(0);
+        Equipo ultimo = equipos.remove(equipos.size() - 1);
+        equipos.add(1, ultimo);
+        equipos.set(0, fijo);
     }
 }
