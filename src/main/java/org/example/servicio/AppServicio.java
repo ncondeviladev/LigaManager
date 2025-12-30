@@ -62,8 +62,6 @@ public class AppServicio {
 
     public static void crearUsuario(String email, String password, TipoUsuario tipoUsuario, String idEquipo) {
 
-        LigaRepo ligarepo = RepoFactory.getRepositorio("JSON");
-
         List<Usuario> usuarios = usuarioDAO.listarTodos();
 
         Set<Integer> usados = new HashSet<>();
@@ -84,7 +82,7 @@ public class AppServicio {
         // Formatear el nuevo ID
         String idUsuario = String.format("U%04d", nuevoNumero);
 
-        List<Jugador> jugadores = ligarepo.getJugadorDAO().buscarPorIdEquipo(idEquipo);
+        List<Jugador> jugadores = jugadorDAO.buscarPorIdEquipo(idEquipo);
 
         String portero = null;
         for (Jugador jugador : jugadores) {
@@ -122,12 +120,14 @@ public class AppServicio {
             }
         }
 
-        Alineacion alineacionnew = new Alineacion(F442, portero, defensas, medios, delanteros);
+        if (usuarioDAO.buscarPorIdEquipo(idEquipo).isEmpty()) {
+            Alineacion alineacionnew = new Alineacion(F442, portero, defensas, medios, delanteros);
 
-        String contrasenya = SeguridadUtils.hashPassword(password);
+            String contrasenya = SeguridadUtils.hashPassword(password);
 
-        Usuario usuario = new Usuario(idUsuario, email, contrasenya, tipoUsuario, 100000.0, alineacionnew, idEquipo);
+            Usuario usuario = new Usuario(idUsuario, email, contrasenya, tipoUsuario, 100000.0, alineacionnew, idEquipo);
 
-        usuarioDAO.guardar(usuario);
+            usuarioDAO.guardar(usuario);
+        } else System.out.println("El equipo que has elegido ya pertenece a otro usuario");
     }
 }
