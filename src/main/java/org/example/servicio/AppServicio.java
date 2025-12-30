@@ -1,9 +1,7 @@
 package org.example.servicio;
 
-import org.example.modelos.Alineacion;
-import org.example.modelos.Jugador;
-import org.example.modelos.Mercado;
-import org.example.modelos.Usuario;
+import org.example.modelos.*;
+import org.example.modelos.enums.Formacion;
 import org.example.modelos.enums.Posicion;
 import org.example.modelos.enums.TipoUsuario;
 import org.example.repositorios.dao.*;
@@ -62,14 +60,25 @@ public class AppServicio {
 
     public static void crearUsuario(String email, String password, TipoUsuario tipoUsuario, String idEquipo) {
 
-        List<Usuario> usuarios = usuarioDAO.listarTodos();
+        // Comprobar que el equipo existe
+        Optional<Equipo> equipoOpt = equipoDAO.buscarPorId(idEquipo);
+        if (equipoOpt.isEmpty()) {
+            System.out.println("El equipo seleccionado no existe.");
+            return;
+        }
 
+        // 2Comprobar que el equipo no esté ya asignado
+        if (!usuarioDAO.buscarPorIdEquipo(idEquipo).isEmpty()) {
+            System.out.println("El equipo que has elegido ya pertenece a otro usuario.");
+            return;
+        }
+
+        List<Usuario> usuarios = usuarioDAO.listarTodos();
         Set<Integer> usados = new HashSet<>();
 
-        // Extraer los números usados
+        // Extraer los números usados de los IDs
         for (Usuario u : usuarios) {
-            String usuarioId = u.getId();
-            int numero = Integer.parseInt(usuarioId.substring(1));
+            int numero = Integer.parseInt(u.getId().substring(1));
             usados.add(numero);
         }
 
@@ -79,55 +88,49 @@ public class AppServicio {
             nuevoNumero++;
         }
 
-        // Formatear el nuevo ID
+        // Formatear ID del usuario
         String idUsuario = String.format("U%04d", nuevoNumero);
 
+        // Obtener jugadores del equipo
         List<Jugador> jugadores = jugadorDAO.buscarPorIdEquipo(idEquipo);
 
         String portero = null;
-        for (Jugador jugador : jugadores) {
-            if (jugador.getPosicion().equals(Posicion.PORTERO)) {
-                portero = jugador.getId();
-            } else {
-                break;
-            }
-        }
-
         List<String> defensas = new ArrayList<>();
-        for (Jugador jugador : jugadores) {
-            if (defensas.size() == 4) break;
-
-            if (jugador.getPosicion().equals(Posicion.DEFENSA)) {
-                defensas.add(jugador.getId());
-            }
-        }
-
         List<String> medios = new ArrayList<>();
-        for (Jugador jugador : jugadores) {
-            if (medios.size() == 4) break;
-
-            if (jugador.getPosicion().equals(Posicion.MEDIO)) {
-                medios.add(jugador.getId());
-            }
-        }
-
         List<String> delanteros = new ArrayList<>();
-        for (Jugador jugador : jugadores) {
-            if (delanteros.size() == 2) break;
 
-            if (jugador.getPosicion().equals(Posicion.DELANTERO)) {
-                delanteros.add(jugador.getId());
+        for (Jugador jugador : jugadores) {
+            switch (jugador.getPosicion()) {
+                case PORTERO -> portero = jugador.getId();
+                case DEFENSA -> {
+                    if (defensas.size() < 4) defensas.add(jugador.getId());
+                }
+                case MEDIO -> {
+                    if (medios.size() < 4) medios.add(jugador.getId());
+                }
+                case DELANTERO -> {
+                    if (delanteros.size() < 2) delanteros.add(jugador.getId());
+                }
             }
         }
 
-        if (usuarioDAO.buscarPorIdEquipo(idEquipo).isEmpty()) {
-            Alineacion alineacionnew = new Alineacion(F442, portero, defensas, medios, delanteros);
+        Alineacion alineacion = new Alineacion(Formacion.F442, portero, defensas, medios, delanteros);
 
-            String contrasenya = SeguridadUtils.hashPassword(password);
+        String contrasenya = SeguridadUtils.hashPassword(password);
 
-            Usuario usuario = new Usuario(idUsuario, email, contrasenya, tipoUsuario, 100000.0, alineacionnew, idEquipo);
+        Usuario usuario = new Usuario(
+                idUsuario,
+                email,
+                contrasenya,
+                tipoUsuario,
+                100000.0,
+                alineacion,
+                idEquipo
+        );
 
-            usuarioDAO.guardar(usuario);
-        } else System.out.println("El equipo que has elegido ya pertenece a otro usuario");
+        usuarioDAO.guardar(usuario);
+
+        System.out.println("Usuario creado correctamente.");
     }
+
 }

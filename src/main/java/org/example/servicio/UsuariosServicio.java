@@ -5,6 +5,7 @@ import org.example.modelos.Usuario;
 import org.example.repositorios.dao.UsuarioDAO;
 import org.example.repositorios.repo.LigaRepo;
 import org.example.repositorios.repo.RepoFactory;
+import org.example.utils.TextTable;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,34 +23,37 @@ public class UsuariosServicio {
         LigaRepo ligarepo = RepoFactory.getRepositorio("JSON");
         List<Usuario> listaUsuarios = ligarepo.getUsuarioDAO().listarTodos();
         List<Equipo> listaEquipos = ligarepo.getEquipoDAO().listarTodos();
-        StringBuilder sb = new StringBuilder();
 
-        // Cabecera de la tabla
-        sb.append(String.format("%-5s %-25s %-20s%n", "ID", "EMAIL", "EQUIPO"));
-        sb.append("----------------------------------------------------------\n");
+        // Crear la tabla con padding y cabeceras
+        TextTable table = new TextTable(1, "ID", "EMAIL", "EQUIPO");
 
-        // Contenido de la tabla
+        // Alinear ID a la derecha
+        table.setAlign("ID", TextTable.Align.RIGHT);
+
         for (Usuario u : listaUsuarios) {
             String nombreEquipo = "Sin equipo";
 
-            // Buscar nombre del equipo por id
+            // Buscar el equipo asignado al usuario
             for (Equipo e : listaEquipos) {
-                if (Objects.equals(e.getId(), u.getIdEquipo())) {
+                if (u.getIdEquipo() != null &&
+                        Objects.equals(u.getIdEquipo(), String.valueOf(e.getId()))) {
                     nombreEquipo = e.getNombre();
                     break;
                 }
             }
 
-            sb.append(String.format(
-                    "%-5s %-25s %-20s%n",
-                    u.getId(),
+            // Añadir fila a la tabla
+            table.addRow(
+                    String.valueOf(u.getId()),
                     u.getEmail(),
                     nombreEquipo
-            ));
+            );
         }
 
-        return sb.toString();
+        // Devolver la tabla en formato texto
+        return table.toString();
     }
+
 
     public static void borrarUsuario(String usuario) {
         usuarioDAO.eliminarPorId(usuario);
