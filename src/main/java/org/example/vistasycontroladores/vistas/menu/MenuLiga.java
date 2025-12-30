@@ -14,7 +14,7 @@ public class MenuLiga {
     public static void mostrarMenuLiga(Usuario usuario) {
         int opcion;
         do {
-            opcion = MenuUtils.crearMenu("=== LIGA FANTASY ===", "Clasificación", "Jornadas", "Simular partido", "Volver");
+            opcion = MenuUtils.crearMenu("=== LIGA FANTASY ===", "Clasificación", "Jornadas", "Simular jornada", "Volver");
 
             switch (opcion) {
                 case 1: mostrarClasificacion();

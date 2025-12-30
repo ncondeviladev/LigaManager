@@ -5,8 +5,7 @@ import org.example.modelos.Jugador;
 import org.example.modelos.Usuario;
 import org.example.modelos.enums.Formacion;
 import org.example.modelos.enums.Posicion;
-import org.example.repositorios.dao.EquipoDAO;
-import org.example.repositorios.dao.UsuarioDAO;
+import org.example.repositorios.dao.*;
 import org.example.repositorios.repo.LigaRepo;
 import org.example.repositorios.repo.RepoFactory;
 import org.example.utils.TextTable;
@@ -22,6 +21,9 @@ public class AlineacionServicio {
     // DAOs para acceso a usuarios y equipos
     private static final UsuarioDAO usuarioDAO = repo.getUsuarioDAO();
     private static final EquipoDAO equipoDAO = repo.getEquipoDAO();
+    private static final MercadoDAO mercadoDAO = repo.getMercadoDAO();
+    private static final JugadorDAO jugadorDAO = repo.getJugadorDAO();
+    private static final JornadaDAO jornadaDAO = repo.getJornadaDAO();
 
     /**
      * Convierte una alineación a texto legible
@@ -75,8 +77,8 @@ public class AlineacionServicio {
             case 3 -> alineacion.setFormacion(Formacion.F451);
             case 4 -> alineacion.setFormacion(Formacion.F343);
             case 5 -> alineacion.setFormacion(Formacion.F352);
+            default -> alineacion.setFormacion(Formacion.F442);
         }
-        usuarioDAO.guardar(usuario);
 
     }
 
@@ -86,7 +88,7 @@ public class AlineacionServicio {
     public static boolean cambiarPortero(Usuario usuario, String idPortero) {
 
         Alineacion alineacion = usuario.getAlineacion();
-        List<Jugador> jugadores = JugadorServicio.getAllJugadores();
+        List<Jugador> jugadores = jugadorDAO.buscarPorIdEquipo(usuario.getIdEquipo());
 
         // Buscar jugador por id
         for (Jugador j : jugadores) {
@@ -121,7 +123,7 @@ public class AlineacionServicio {
     public static boolean cambiarDefensas(Usuario usuario, ArrayList<String> defensas) {
 
         Alineacion alineacion = usuario.getAlineacion();
-        List<Jugador> jugadores = JugadorServicio.getAllJugadores();
+        List<Jugador> jugadores = jugadorDAO.buscarPorIdEquipo(usuario.getIdEquipo());
         List<String> defensasValidas = new ArrayList<>();
 
         // Crear mapa id -> jugador
@@ -134,11 +136,13 @@ public class AlineacionServicio {
         for (String id : defensas) {
             Jugador j = mapaJugadores.get(id);
             if (j != null && j.getPosicion() == Posicion.DEFENSA) {
-                defensasValidas.add(id);
+                if (!defensasValidas.contains(id)) {
+                    defensasValidas.add(id);
+                }
             }
         }
 
-        if (defensasValidas.isEmpty()) return false;
+        if (defensasValidas.size() != getNumeroDefensas(usuario)) return false;
 
         alineacion.setDefensas(defensasValidas);
         usuarioDAO.guardar(usuario);
@@ -158,7 +162,7 @@ public class AlineacionServicio {
     public static boolean cambiarMedios(Usuario usuario, ArrayList<String> medios) {
 
         Alineacion alineacion = usuario.getAlineacion();
-        List<Jugador> jugadores = JugadorServicio.getAllJugadores();
+        List<Jugador> jugadores = jugadorDAO.buscarPorIdEquipo(usuario.getIdEquipo());
         List<String> mediosValidos = new ArrayList<>();
 
         Map<String, Jugador> mapaJugadores = new HashMap<>();
@@ -169,11 +173,13 @@ public class AlineacionServicio {
         for (String id : medios) {
             Jugador j = mapaJugadores.get(id);
             if (j != null && j.getPosicion() == Posicion.MEDIO) {
-                mediosValidos.add(id);
+                if (!mediosValidos.contains(id)) {
+                    mediosValidos.add(id);
+                }
             }
         }
 
-        if (mediosValidos.isEmpty()) return false;
+        if (mediosValidos.size() != getNumeroMedios(usuario)) return false;
 
         alineacion.setMedios(mediosValidos);
         usuarioDAO.guardar(usuario);
@@ -193,7 +199,7 @@ public class AlineacionServicio {
     public static boolean cambiarDelanteros(Usuario usuario, ArrayList<String> delanteros) {
 
         Alineacion alineacion = usuario.getAlineacion();
-        List<Jugador> jugadores = JugadorServicio.getAllJugadores();
+        List<Jugador> jugadores = jugadorDAO.buscarPorIdEquipo(usuario.getIdEquipo());
         List<String> delanterosValidos = new ArrayList<>();
 
         Map<String, Jugador> mapaJugadores = new HashMap<>();
@@ -204,11 +210,13 @@ public class AlineacionServicio {
         for (String id : delanteros) {
             Jugador j = mapaJugadores.get(id);
             if (j != null && j.getPosicion() == Posicion.DELANTERO) {
-                delanterosValidos.add(id);
+                if (!delanterosValidos.contains(id)) {
+                    delanterosValidos.add(id);
+                }
             }
         }
 
-        if (delanterosValidos.isEmpty()) return false;
+        if (delanterosValidos.size() != getNumeroDelanteros(usuario)) return false;
 
         alineacion.setDelanteros(delanterosValidos);
         usuarioDAO.guardar(usuario);
