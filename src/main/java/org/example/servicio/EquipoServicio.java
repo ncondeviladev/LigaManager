@@ -8,7 +8,9 @@ import org.example.repositorios.repo.LigaRepo;
 import org.example.repositorios.repo.RepoFactory;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
+
+import org.example.utils.TextTable;
 
 
 public class EquipoServicio {
@@ -25,41 +27,42 @@ public class EquipoServicio {
         List<Usuario> listaUsuarios = usuarioDAO.listarTodos();
         List<Equipo> listaEquipos = equipoDAO.listarTodos();
 
-        StringBuilder sb = new StringBuilder();
+        // Crear tabla con padding 1 y cabeceras
+        TextTable table = new TextTable(1, "ID", "EQUIPO", "USUARIO");
 
-        // Cabecera de la tabla
-        sb.append(String.format("%-20s %-25s %-5s%n", "EQUIPO", "USUARIO", "ID"));
-        sb.append("-----------------------------------------------------------\n");
+        // Alinear ID a la derecha (opcional, queda más bonito)
+        table.setAlign("ID", TextTable.Align.RIGHT);
 
-        // Contenido de la tabla
         for (Equipo e : listaEquipos) {
             Usuario usuarioAsignado = null;
 
-            // Buscar usuario asignado al equipo
+            // Buscar si algún usuario tiene asignado este equipo
             for (Usuario u : listaUsuarios) {
-                if (u.getIdEquipo() == e.getId()) {
+                if (u.getIdEquipo() != null &&
+                        Objects.equals(u.getIdEquipo(), String.valueOf(e.getId()))) {
                     usuarioAsignado = u;
                     break;
                 }
             }
 
+            // Añadir fila a la tabla
             if (usuarioAsignado != null) {
-                sb.append(String.format(
-                        "%-20s %-25s %-5d%n",
+                table.addRow(
+                        String.valueOf(e.getId()),
                         e.getNombre(),
-                        usuarioAsignado.getEmail(),
-                        usuarioAsignado.getId()
-                ));
+                        usuarioAsignado.getEmail()
+                );
             } else {
-                sb.append(String.format(
-                        "%-20s %-25s %-5s%n",
+                table.addRow(
+                        String.valueOf(e.getId()),
                         e.getNombre(),
-                        "Sin asignar",
-                        "-"
-                ));
+                        "Sin asignar"
+                );
             }
         }
 
-        return sb.toString();
+        // Devolver la tabla en formato texto
+        return table.toString();
     }
+
 }
