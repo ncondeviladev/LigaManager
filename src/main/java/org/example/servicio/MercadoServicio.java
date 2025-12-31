@@ -1,5 +1,6 @@
 package org.example.servicio;
 
+import org.example.utils.dataUtils.DataAccessException;
 import org.example.modelos.Jugador;
 import org.example.modelos.Mercado;
 import org.example.modelos.Usuario;
@@ -18,24 +19,26 @@ public class MercadoServicio {
 
     // DAOs instanciados al inicio para uso en toda la clase
     private static final UsuarioDAO usuarioDAO = repo.getUsuarioDAO();
-    private static final EquipoDAO equipoDAO =  repo.getEquipoDAO();
+    private static final EquipoDAO equipoDAO = repo.getEquipoDAO();
     private static final MercadoDAO mercadoDAO = repo.getMercadoDAO();
     private static final JugadorDAO jugadorDAO = repo.getJugadorDAO();
-    private static final JornadaDAO jornadaDAO  = repo.getJornadaDAO();
+    private static final JornadaDAO jornadaDAO = repo.getJornadaDAO();
 
     public static int comprarJugador(Usuario usuario, String id) {
         try {
-            //Comprueba que el jugador no lo este vendiendo el propio usuario
-            if (mercadoDAO.buscarPorId(id).isPresent() && !mercadoDAO.buscarPorId(id).get().getVendedorId().equals(usuario.getId())) {
-                //Comprueba que el usuario tenga saldo suficiente
+            // Comprueba que el jugador no lo este vendiendo el propio usuario
+            if (mercadoDAO.buscarPorId(id).isPresent()
+                    && !mercadoDAO.buscarPorId(id).get().getVendedorId().equals(usuario.getId())) {
+                // Comprueba que el usuario tenga saldo suficiente
                 if (usuario.getSaldo() >= mercadoDAO.buscarPorId(id).get().getPrecioVenta()) {
-                    //Comprueba que el equipo del comprador no este lleno
+                    // Comprueba que el equipo del comprador no este lleno
                     if (jugadorDAO.buscarPorIdEquipo(usuario.getIdEquipo()).size() == 22) {
                         return 2;
                     } else {
                         usuario.setSaldo(usuario.getSaldo() - mercadoDAO.buscarPorId(id).get().getPrecioVenta());
                         if (usuarioDAO.buscarPorId(mercadoDAO.buscarPorId(id).get().getVendedorId()).isPresent()) {
-                            Usuario vendedor = usuarioDAO.buscarPorId(mercadoDAO.buscarPorId(id).get().getVendedorId()).get();
+                            Usuario vendedor = usuarioDAO.buscarPorId(mercadoDAO.buscarPorId(id).get().getVendedorId())
+                                    .get();
                             vendedor.setSaldo(vendedor.getSaldo() + mercadoDAO.buscarPorId(id).get().getPrecioVenta());
                             usuarioDAO.guardar(vendedor);
                         }
@@ -46,13 +49,15 @@ public class MercadoServicio {
                         mercadoDAO.eliminarPorId(id);
                         return 1;
                     }
-                } else return 4;
-            } else return 3;
-        } catch (RuntimeException e) {
+                } else
+                    return 4;
+            } else
+                return 3;
+        } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
             return 3;
         }
     }
-
 
     public static int venderJugador(Usuario usuario, String id, double precio) {
         List<Mercado> mercados = mercadoDAO.listarTodos();
@@ -80,10 +85,12 @@ public class MercadoServicio {
         String nuevoId = String.format("M%04d", nuevoNumero);
 
         try {
-            //Comprueba que el jugador sea propiedad del usuario que quiere venderlo y que el precio no sea negativo
+            // Comprueba que el jugador sea propiedad del usuario que quiere venderlo y que
+            // el precio no sea negativo
             if (Objects.equals(usuario.getIdEquipo(), jugadorDAO.buscarPorId(id).get().getIdEquipo())) {
                 if (precio >= 0) {
-                    //Comprueba que el jugador que quieres vender no este actualmente en tu alineación
+                    // Comprueba que el jugador que quieres vender no este actualmente en tu
+                    // alineación
                     for (Jugador jugador : jugadorDAO.buscarPorIdEquipo(usuario.getIdEquipo())) {
                         for (String idJugador : usuario.getAlineacion().getJugadores()) {
                             if (jugador.getId().equals(idJugador)) {
@@ -97,10 +104,13 @@ public class MercadoServicio {
                     jugador.setIdEquipo("T00");
                     jugadorDAO.guardar(jugador);
                     return 0;
-                } else return 4;
-            } else return 1;
+                } else
+                    return 4;
+            } else
+                return 1;
 
-        } catch (RuntimeException e) {
+        } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
             return 5;
         }
     }
