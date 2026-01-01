@@ -5,6 +5,7 @@ import org.example.modelos.competicion.Gol;
 import org.example.modelos.competicion.Partido;
 import org.example.repositorios.repo.LigaRepo;
 import org.example.repositorios.repo.RepoFactory;
+import org.example.utils.dataUtils.DataAccessException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,87 +24,91 @@ public class SimularPartido {
             Equipo equipoLocal,
             Equipo equipoVisitante) {
 
-        Jugador[] eqLocal = construirEquipo(alineacionLocal, jugadores);
-        Jugador[] eqVisitante = construirEquipo(alineacionVisitante, jugadores);
+        try {
+            Jugador[] eqLocal = construirEquipo(alineacionLocal, jugadores);
+            Jugador[] eqVisitante = construirEquipo(alineacionVisitante, jugadores);
 
-        int golesLocal = 0;
-        int golesVisitante = 0;
+            int golesLocal = 0;
+            int golesVisitante = 0;
 
-        List<Gol> goles = new ArrayList<>();
+            List<Gol> goles = new ArrayList<>();
 
-        boolean posesionLocal = Math.random() < 0.5;
-        int posicionPelota = 5;
+            boolean posesionLocal = Math.random() < 0.5;
+            int posicionPelota = 5;
 
-        for (int i = 0; i < JUGADAS_MAX; i++) {
+            for (int i = 0; i < JUGADAS_MAX; i++) {
 
-            Jugador atacante = posesionLocal
-                    ? eqLocal[posicionPelota]
-                    : eqVisitante[posicionPelota];
+                Jugador atacante = posesionLocal
+                        ? eqLocal[posicionPelota]
+                        : eqVisitante[posicionPelota];
 
-            Jugador defensor = posesionLocal
-                    ? eqVisitante[10 - posicionPelota]
-                    : eqLocal[10 - posicionPelota];
+                Jugador defensor = posesionLocal
+                        ? eqVisitante[10 - posicionPelota]
+                        : eqLocal[10 - posicionPelota];
 
-            int fuerzaAtacante = calcularFuerza(atacante);
-            int fuerzaDefensor = calcularFuerza(defensor);
+                int fuerzaAtacante = calcularFuerza(atacante);
+                int fuerzaDefensor = calcularFuerza(defensor);
 
-            int diferencia = fuerzaAtacante - fuerzaDefensor;
+                int diferencia = fuerzaAtacante - fuerzaDefensor;
 
-            // ---- DUELO ----
-            if (diferencia > -10) {
+                // ---- DUELO ----
+                if (diferencia > -10) {
 
-                // ---- PROBABILIDAD DE AVANZAR ----
-                if (Math.random() < 0.65) {
-                    posicionPelota++;
-                }
-
-                // ---- ZONA DE GOL ----
-                if (posicionPelota > 10) {
-
-                    // ---- PROBABILIDAD DE GOL ----
-                    double probGol = 0.25 + (diferencia / 100.0);
-                    probGol = Math.max(0.1, Math.min(probGol, 0.6));
-
-                    if (Math.random() < probGol) {
-
-                        int minuto = (int) (Math.random() * 90) + 1;
-
-                        if (posesionLocal) {
-                            golesLocal++;
-                            goles.add(new Gol(atacante.getId(), minuto));
-                        } else {
-                            golesVisitante++;
-                            goles.add(new Gol(atacante.getId(), minuto));
-                        }
+                    // ---- PROBABILIDAD DE AVANZAR ----
+                    if (Math.random() < 0.65) {
+                        posicionPelota++;
                     }
 
-                    // Cambio de posesión tras ocasión
+                    // ---- ZONA DE GOL ----
+                    if (posicionPelota > 10) {
+
+                        // ---- PROBABILIDAD DE GOL ----
+                        double probGol = 0.25 + (diferencia / 100.0);
+                        probGol = Math.max(0.1, Math.min(probGol, 0.6));
+
+                        if (Math.random() < probGol) {
+
+                            int minuto = (int) (Math.random() * 90) + 1;
+
+                            if (posesionLocal) {
+                                golesLocal++;
+                                goles.add(new Gol(atacante.getId(), minuto));
+                            } else {
+                                golesVisitante++;
+                                goles.add(new Gol(atacante.getId(), minuto));
+                            }
+                        }
+
+                        // Cambio de posesión tras ocasión
+                        posesionLocal = !posesionLocal;
+                        posicionPelota = 5;
+                    }
+
+                } else {
+                    // ---- DEFENSA GANA ----
                     posesionLocal = !posesionLocal;
                     posicionPelota = 5;
                 }
-
-            } else {
-                // ---- DEFENSA GANA ----
-                posesionLocal = !posesionLocal;
-                posicionPelota = 5;
             }
+
+            // Guardar resultado
+            partido.setGolesLocal(golesLocal);
+            partido.setGolesVisitante(golesVisitante);
+            partido.setGoles(goles);
+
+            // Actualizar equipos
+            actualizarEquipos(equipoLocal, equipoVisitante, golesLocal, golesVisitante);
+
+            repo.getEquipoDAO().guardar(equipoLocal);
+            repo.getEquipoDAO().guardar(equipoVisitante);
+
+            System.out.println(
+                    equipoLocal.getNombre() + " " + golesLocal +
+                            " - " + golesVisitante + " " + equipoVisitante.getNombre()
+            );
+        } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
         }
-
-        // Guardar resultado
-        partido.setGolesLocal(golesLocal);
-        partido.setGolesVisitante(golesVisitante);
-        partido.setGoles(goles);
-
-        // Actualizar equipos
-        actualizarEquipos(equipoLocal, equipoVisitante, golesLocal, golesVisitante);
-
-        repo.getEquipoDAO().guardar(equipoLocal);
-        repo.getEquipoDAO().guardar(equipoVisitante);
-
-        System.out.println(
-                equipoLocal.getNombre() + " " + golesLocal +
-                        " - " + golesVisitante + " " + equipoVisitante.getNombre()
-        );
     }
 
     // ---------------- AUXILIARES ----------------
@@ -111,7 +116,6 @@ public class SimularPartido {
     private static void actualizarEquipos(
             Equipo local, Equipo visitante,
             int gl, int gv) {
-
         local.setGf(local.getGf() + gl);
         local.setGc(local.getGc() + gv);
 
@@ -129,7 +133,6 @@ public class SimularPartido {
     }
 
     private static Jugador[] construirEquipo(Alineacion alineacion, List<Jugador> jugadores) {
-
         Jugador[] equipo = new Jugador[11];
         int index = 0;
 
