@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.example.utils.TextTable;
+import org.example.utils.dataUtils.DataAccessException;
 
 
 public class EquipoServicio {
@@ -23,46 +24,50 @@ public class EquipoServicio {
 
     //Debe mostrar una lista de los equipos junto a sus IDs
     public static String mostrarEquipos() {
+        try {
 
-        List<Usuario> listaUsuarios = usuarioDAO.listarTodos();
-        List<Equipo> listaEquipos = equipoDAO.listarTodos();
+            List<Usuario> listaUsuarios = usuarioDAO.listarTodos();
+            List<Equipo> listaEquipos = equipoDAO.listarTodos();
 
-        // Crear tabla con padding 1 y cabeceras
-        TextTable table = new TextTable(1, "ID", "EQUIPO", "USUARIO");
+            // Crear tabla con padding 1 y cabeceras
+            TextTable table = new TextTable(1, "ID", "EQUIPO", "USUARIO");
 
-        // Alinear ID a la derecha (opcional, queda más bonito)
-        table.setAlign("ID", TextTable.Align.RIGHT);
+            // Alinear ID a la derecha (opcional, queda más bonito)
+            table.setAlign("ID", TextTable.Align.RIGHT);
 
-        for (Equipo e : listaEquipos) {
-            Usuario usuarioAsignado = null;
+            for (Equipo e : listaEquipos) {
+                Usuario usuarioAsignado = null;
 
-            // Buscar si algún usuario tiene asignado este equipo
-            for (Usuario u : listaUsuarios) {
-                if (u.getIdEquipo() != null &&
-                        Objects.equals(u.getIdEquipo(), String.valueOf(e.getId()))) {
-                    usuarioAsignado = u;
-                    break;
+                // Buscar si algún usuario tiene asignado este equipo
+                for (Usuario u : listaUsuarios) {
+                    if (u.getIdEquipo() != null &&
+                            Objects.equals(u.getIdEquipo(), String.valueOf(e.getId()))) {
+                        usuarioAsignado = u;
+                        break;
+                    }
+                }
+
+                // Añadir fila a la tabla
+                if (usuarioAsignado != null) {
+                    table.addRow(
+                            String.valueOf(e.getId()),
+                            e.getNombre(),
+                            usuarioAsignado.getEmail()
+                    );
+                } else {
+                    table.addRow(
+                            String.valueOf(e.getId()),
+                            e.getNombre(),
+                            "Sin asignar"
+                    );
                 }
             }
 
-            // Añadir fila a la tabla
-            if (usuarioAsignado != null) {
-                table.addRow(
-                        String.valueOf(e.getId()),
-                        e.getNombre(),
-                        usuarioAsignado.getEmail()
-                );
-            } else {
-                table.addRow(
-                        String.valueOf(e.getId()),
-                        e.getNombre(),
-                        "Sin asignar"
-                );
-            }
+            // Devolver la tabla en formato texto
+            return table.toString();
+        } catch (DataAccessException e) {
+            return e.getMessage();
         }
-
-        // Devolver la tabla en formato texto
-        return table.toString();
     }
 
 }

@@ -4,6 +4,7 @@ import org.example.modelos.Equipo;
 import org.example.modelos.competicion.Jornada;
 import org.example.modelos.competicion.Partido;
 import org.example.repositorios.repo.LigaRepo;
+import org.example.utils.dataUtils.DataAccessException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,77 +16,82 @@ public class GeneradorJornadas {
      * Genera TODAS las jornadas de una liga completa (ida y vuelta)
      */
     public static List<Jornada> generarLigaCompleta(LigaRepo repo, List<Equipo> equipos) {
+        try {
 
-        List<Jornada> jornadas = new ArrayList<>();
+            List<Jornada> jornadas = new ArrayList<>();
 
-        // Copia para no modificar la original
-        List<Equipo> lista = new ArrayList<>(equipos);
+            // Copia para no modificar la original
+            List<Equipo> lista = new ArrayList<>(equipos);
 
-        // Si es impar, añadimos equipo fantasma
-        boolean hayDescanso = lista.size() % 2 != 0;
-        if (hayDescanso) lista.add(null);
+            // Si es impar, añadimos equipo fantasma
+            boolean hayDescanso = lista.size() % 2 != 0;
+            if (hayDescanso) lista.add(null);
 
-        int numEquipos = lista.size();
-        int jornadasIda = numEquipos - 1;
-        int partidosPorJornada = numEquipos / 2;
+            int numEquipos = lista.size();
+            int jornadasIda = numEquipos - 1;
+            int partidosPorJornada = numEquipos / 2;
 
-        int numeroJornada = 1; // Siempre empieza en J01
+            int numeroJornada = 1; // Siempre empieza en J01
 
-        // ----- IDA -----
-        for (int j = 0; j < jornadasIda; j++) {
+            // ----- IDA -----
+            for (int j = 0; j < jornadasIda; j++) {
 
-            List<Partido> partidos = new ArrayList<>();
+                List<Partido> partidos = new ArrayList<>();
 
-            for (int i = 0; i < partidosPorJornada; i++) {
-                Equipo local = lista.get(i);
-                Equipo visitante = lista.get(numEquipos - 1 - i);
+                for (int i = 0; i < partidosPorJornada; i++) {
+                    Equipo local = lista.get(i);
+                    Equipo visitante = lista.get(numEquipos - 1 - i);
 
-                if (local == null || visitante == null) continue;
+                    if (local == null || visitante == null) continue;
 
-                partidos.add(crearPartido(numeroJornada, local, visitante));
+                    partidos.add(crearPartido(numeroJornada, local, visitante));
+                }
+
+                Jornada jornada = new Jornada(
+                        "J" + String.format("%02d", numeroJornada),
+                        numeroJornada,
+                        partidos
+                );
+
+                repo.getJornadaDAO().guardar(jornada);
+                jornadas.add(jornada);
+
+                numeroJornada++;
+                rotarEquipos(lista);
             }
 
-            Jornada jornada = new Jornada(
-                    "J" + String.format("%02d", numeroJornada),
-                    numeroJornada,
-                    partidos
-            );
+            // ----- VUELTA -----
+            int totalJornadas = jornadas.size();
+            for (int j = 0; j < totalJornadas; j++) {
 
-            repo.getJornadaDAO().guardar(jornada);
-            jornadas.add(jornada);
+                Jornada ida = jornadas.get(j);
+                List<Partido> partidosVuelta = new ArrayList<>();
 
-            numeroJornada++;
-            rotarEquipos(lista);
-        }
+                for (Partido p : ida.getPartidos()) {
 
-        // ----- VUELTA -----
-        int totalJornadas = jornadas.size();
-        for (int j = 0; j < totalJornadas; j++) {
+                    Equipo local = repo.getEquipoDAO().buscarPorId(p.getEquipoVisitanteId()).orElseThrow();
+                    Equipo visitante = repo.getEquipoDAO().buscarPorId(p.getEquipoLocalId()).orElseThrow();
 
-            Jornada ida = jornadas.get(j);
-            List<Partido> partidosVuelta = new ArrayList<>();
+                    partidosVuelta.add(crearPartido(numeroJornada, local, visitante));
+                }
 
-            for (Partido p : ida.getPartidos()) {
+                Jornada vuelta = new Jornada(
+                        "J" + String.format("%02d", numeroJornada),
+                        numeroJornada,
+                        partidosVuelta
+                );
 
-                Equipo local = repo.getEquipoDAO().buscarPorId(p.getEquipoVisitanteId()).orElseThrow();
-                Equipo visitante = repo.getEquipoDAO().buscarPorId(p.getEquipoLocalId()).orElseThrow();
+                repo.getJornadaDAO().guardar(vuelta);
+                jornadas.add(vuelta);
 
-                partidosVuelta.add(crearPartido(numeroJornada, local, visitante));
+                numeroJornada++;
             }
 
-            Jornada vuelta = new Jornada(
-                    "J" + String.format("%02d", numeroJornada),
-                    numeroJornada,
-                    partidosVuelta
-            );
-
-            repo.getJornadaDAO().guardar(vuelta);
-            jornadas.add(vuelta);
-
-            numeroJornada++;
+            return jornadas;
+        } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
+            return null;
         }
-
-        return jornadas;
     }
 
     // ---- MÉTODOS AUXILIARES ----
