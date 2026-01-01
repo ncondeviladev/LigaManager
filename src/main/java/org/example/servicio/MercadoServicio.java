@@ -1,5 +1,6 @@
 package org.example.servicio;
 
+import org.example.utils.TextTable;
 import org.example.utils.dataUtils.DataAccessException;
 import org.example.modelos.Jugador;
 import org.example.modelos.Mercado;
@@ -9,10 +10,7 @@ import org.example.repositorios.repo.LigaRepo;
 import org.example.repositorios.repo.RepoFactory;
 
 import java.text.NumberFormat;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class MercadoServicio {
     private static final LigaRepo repo = RepoFactory.getRepositorio("JSON");
@@ -115,11 +113,97 @@ public class MercadoServicio {
         }
     }
 
-    public static List<Mercado> jugadoresEnVentaDeUsuario(Usuario usuario) {
-        return mercadoDAO.listarPropios(usuario.getId());
+    public static String jugadoresEnVentaDeUsuario(Usuario usuario) {
+        try {
+            List<Mercado> mercados = mercadoDAO.listarPropios(usuario.getId());
+
+            if (mercados == null || mercados.isEmpty()) {
+                return "No tienes jugadores en venta actualmente.";
+            }
+
+            TextTable table = new TextTable(
+                    "ID Mercado",
+                    "Jugador",
+                    "Vendedor",
+                    "Precio (M€)"
+            );
+
+            table.setAlign("Precio (M€)", TextTable.Align.RIGHT);
+
+            for (Mercado m : mercados) {
+
+                // Obtener jugador desde repositorio
+                Optional<Jugador> jugador = jugadorDAO.buscarPorId(m.getJugadorId());
+                String nombreJugador = (jugador.isPresent())
+                        ? jugador.get().getNombre()
+                        : "Desconocido";
+
+                // Obtener usuario vendedor desde repositorio
+                Optional<Usuario> vendedor = usuarioDAO.buscarPorId(m.getVendedorId());
+                String nombreVendedor = (vendedor.isPresent())
+                        ? vendedor.get().getEmail()   // o getNombre() si existe
+                        : "Desconocido";
+
+                table.addRow(
+                        m.getId(),
+                        nombreJugador,
+                        nombreVendedor,
+                        String.format("%.2f", m.getPrecioVenta())
+                );
+            }
+
+            return table.toString();
+
+        } catch (DataAccessException e) {
+            return(e.getMessage());
+        }
     }
 
-    public static List<Mercado> jugadoresEnVenta(Usuario usuario) {
-        return mercadoDAO.listarTodosExceptoPropios(usuario.getId());
+
+    public static String jugadoresEnVenta(Usuario usuario) {
+        try {
+            List<Mercado> mercados = mercadoDAO.listarTodosExceptoPropios(usuario.getId());
+
+            if (mercados == null || mercados.isEmpty()) {
+                return "No hay jugadores disponibles en el mercado actualmente.";
+            }
+
+            TextTable table = new TextTable(
+                    "ID Mercado",
+                    "Jugador",
+                    "Vendedor",
+                    "Precio (M€)"
+            );
+
+            table.setAlign("Precio (M€)", TextTable.Align.RIGHT);
+
+            for (Mercado m : mercados) {
+
+                // Resolver jugador
+                Optional<Jugador> jugador = jugadorDAO.buscarPorId(m.getJugadorId());
+                String nombreJugador = (jugador.isPresent())
+                        ? jugador.get().getNombre()
+                        : "Desconocido";
+
+                // Resolver vendedor
+                Optional<Usuario> vendedor = usuarioDAO.buscarPorId(m.getVendedorId());
+                String nombreVendedor = (vendedor.isPresent())
+                        ? vendedor.get().getEmail()   // o nombre si existiera
+                        : "Desconocido";
+
+                table.addRow(
+                        m.getId(),
+                        nombreJugador,
+                        nombreVendedor,
+                        String.format("%.2f", m.getPrecioVenta())
+                );
+            }
+
+            return table.toString();
+
+        } catch (DataAccessException e) {
+            return(e.getMessage());
+        }
     }
+
 }
