@@ -1,1 +1,70 @@
-{"usuarios":[{"id":"U0000","email":"admin@fm.com","password":"5e5bdb9bb8366ca74e4cba341b5c6a36d1b2a4b3c7fcb7ff2519b9b4f6f2d85d","tipo":"ADMIN","saldo":-1.0,"idEquipo":"T00"},{"id":"U0001","email":"luis99@fm.com","password":"5e5bdb9bb8366ca74e4cba341b5c6a36d1b2a4b3c7fcb7ff2519b9b4f6f2d85d","tipo":"ESTANDAR","saldo":50.0,"alineacion":{"portero":"P0001","defensas":["P0003","P0004","P0005","P0006"],"medios":["P0013","P0014","P0015","P0016"],"delanteros":["P0009","P0010"]},"idEquipo":"T01"},{"id":"U0002","email":"ana_dev@fm.com","password":"5e5bdb9bb8366ca74e4cba341b5c6a36d1b2a4b3c7fcb7ff2519b9b4f6f2d85d","tipo":"ESTANDAR","saldo":60.0,"alineacion":{"portero":"P0023","defensas":["P0025","P0026","P0027","P0028"],"medios":["P0031","P0032","P0033","P0034"],"delanteros":["P0035","P0036"]},"idEquipo":"T02"},{"id":"U0003","email":"dayronnotario@gmail.com","password":"a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3","tipo":"ESTANDAR","saldo":110000.0,"alineacion":{"formacion":"F442","portero":"P0398","defensas":["P0399","P0400","P0401","P0402"],"medios":["P0405","P0406","P0407","P0414"],"delanteros":["P0408","P0409"]},"idEquipo":"T19"},{"id":"U0004","email":"noe@dam","password":"03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4","tipo":"ESTANDAR","saldo":90000.0,"alineacion":{"formacion":"F343","portero":"P0420","defensas":["P0426","P0421","P0422","P0423"],"medios":["P0436","P0437","P0438","P0428"],"delanteros":["P0431","P0432"]},"idEquipo":"T20"}]}
+{
+  "usuarios": [
+    {
+      "id": "U0000",
+      "email": "admin@fm.com",
+      "password": "5e5bdb9bb8366ca74e4cba341b5c6a36d1b2a4b3c7fcb7ff2519b9b4f6f2d85d",
+      "tipo": "ADMIN",
+      "saldo": -1.0,
+      "idEquipo": "T00"
+    },
+    {
+      "id": "U0001",
+      "email": "luis99@fm.com",
+      "password": "5e5bdb9bb8366ca74e4cba341b5c6a36d1b2a4b3c7fcb7ff2519b9b4f6f2d85d",
+      "tipo": "ESTANDAR",
+      "saldo": 50.0,
+      "alineacion": {
+        "portero": "P0001",
+        "defensas": ["P0003", "P0004", "P0005", "P0006"],
+        "medios": ["P0013", "P0014", "P0015", "P0016"],
+        "delanteros": ["P0009", "P0010"]
+      },
+      "idEquipo": "T01"
+    },
+    {
+      "id": "U0002",
+      "email": "ana_dev@fm.com",
+      "password": "5e5bdb9bb8366ca74e4cba341b5c6a36d1b2a4b3c7fcb7ff2519b9b4f6f2d85d",
+      "tipo": "ESTANDAR",
+      "saldo": 60.0,
+      "alineacion": {
+        "portero": "P0023",
+        "defensas": ["P0025", "P0026", "P0027", "P0028"],
+        "medios": ["P0031", "P0032", "P0033", "P0034"],
+        "delanteros": ["P0035", "P0036"]
+      },
+      "idEquipo": "T02"
+    },
+    {
+      "id": "U0003",
+      "email": "dayronnotario@gmail.com",
+      "password": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+      "tipo": "ESTANDAR",
+      "saldo": 110000.0,
+      "alineacion": {
+        "formacion": "F442",
+        "portero": "P0398",
+        "defensas": ["P0399", "P0400", "P0401", "P0402"],
+        "medios": ["P0405", "P0406", "P0407", "P0414"],
+        "delanteros": ["P0408", "P0409"]
+      },
+      "idEquipo": "T19"
+    },
+    {
+      "id": "U0004",
+      "email": "noe@dam",
+      "password": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+      "tipo": "ESTANDAR",
+      "saldo": 90000.0,
+      "alineacion": {
+        "formacion": "F343",
+        "portero": "P0420",
+        "defensas": ["P0426", "P0421", "P0422", "P0423"],
+        "medios": ["P0436", "P0437", "P0438", "P0428"],
+        "delanteros": ["P0431", "P0432"]
+      },
+      "idEquipo": "T20"
+    }
+  ]
+}

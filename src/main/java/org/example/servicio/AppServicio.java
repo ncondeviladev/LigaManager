@@ -77,6 +77,7 @@ public class AppServicio {
     }
 
     private static void migrarDatos() {
+        boolean datosMigrados = false;
         try {
             System.out.println(">> Verificando estado de la base de datos para migración...");
 
@@ -84,41 +85,65 @@ public class AppServicio {
             LigaRepo repoJson = RepoFactory.getRepositorio("JSON");
 
             if (equipoDAO.listarTodos().isEmpty()) {
+                System.out.println(">> Base de datos vacía. Iniciando migración COMPLETA desde JSON...");
+
                 System.out.println("... Migrando Equipos desde JSON ...");
                 equipoDAO.guardarTodos(repoJson.getEquipoDAO().listarTodos());
-            }
 
-            if (jugadorDAO.listarTodos().isEmpty()) {
                 System.out.println("... Migrando Jugadores desde JSON ...");
                 jugadorDAO.guardarTodos(repoJson.getJugadorDAO().listarTodos());
-            }
 
-            if (usuarioDAO.listarTodos().isEmpty()) {
-                System.out.println("... Migrando Usuarios desde JSON ...");
+                System.out.println("... Migrando Usuarios ...");
                 usuarioDAO.guardarTodos(repoJson.getUsuarioDAO().listarTodos());
-            }
 
-            if (mercadoDAO.listarTodos().isEmpty()) {
-                System.out.println("... Migrando Mercado desde JSON ...");
+                System.out.println("... Migrando Mercado ...");
                 List<Mercado> mercado = repoJson.getMercadoDAO().listarTodos();
                 for (Mercado m : mercado) {
                     mercadoDAO.guardar(m);
                 }
-            }
 
-            // 5. Jornadas
-            if (jornadaDAO.listarTodas().isEmpty()) {
-                System.out.println("... Migrando Jornadas desde JSON ...");
+                System.out.println("... Migrando Jornadas ...");
                 jornadaDAO.guardarTodas(repoJson.getJornadaDAO().listarTodas());
+
+                System.out.println(">> Migración completada exitosamente.");
+                datosMigrados = true;
+            } else {
+                System.out.println(">> La base de datos ya contiene datos. No se realiza migración.");
+                datosMigrados = true;
             }
 
-            System.out.println(">> Verificación de migración completada.");
-
-        } catch (DataAccessException e) {
-            System.err.println(">> Error de acceso a datos durante la migración: " + e.getMessage());
         } catch (Exception e) {
-            System.err.println(">> Error inesperado durante la migración: " + e.getMessage());
+            System.err.println(">> ERROR CRÍTICO durante la migración: " + e.getMessage());
             e.printStackTrace();
+        } finally {
+            if (!datosMigrados) {
+                System.err.println(">> La migración falló o quedó incompleta. Base de datos reiniciada...");
+                borrarDatosParciales();
+            }
+        }
+    }
+
+    private static void borrarDatosParciales() {
+        try {
+            // Borrar en orden inverso a la inserción para respetar FKs
+
+            List<Jornada> jornadas = jornadaDAO.listarTodas();
+            jornadas.forEach(j -> jornadaDAO.eliminarPorId(j.getId()));
+
+            List<Mercado> mercados = mercadoDAO.listarTodos();
+            mercados.forEach(m -> mercadoDAO.eliminarPorId(m.getId()));
+
+            List<Usuario> usuarios = usuarioDAO.listarTodos();
+            usuarios.forEach(u -> usuarioDAO.eliminarPorId(u.getId()));
+
+            List<Jugador> jugadores = jugadorDAO.listarTodos();
+            jugadores.forEach(j -> jugadorDAO.eliminarPorId(j.getId()));
+
+            List<Equipo> equipos = equipoDAO.listarTodos();
+            equipos.forEach(eq -> equipoDAO.eliminarPorId(eq.getId()));
+
+        } catch (Exception e) {
+            System.err.println("Error durante el borrado de bd: " + e.getMessage());
         }
     }
 
