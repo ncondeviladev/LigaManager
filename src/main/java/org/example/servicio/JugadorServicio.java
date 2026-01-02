@@ -10,20 +10,21 @@ import org.example.utils.dataUtils.DataAccessException;
 import java.util.List;
 
 public class JugadorServicio {
-    private static final LigaRepo repo = RepoFactory.getRepositorio("JSON");
+    private static final LigaRepo repo = RepoFactory.getRepositorio(System.getProperty("TIPO_DATOS", "JSON"));
 
     // DAOs instanciados al inicio para uso en toda la clase
     private static final UsuarioDAO usuarioDAO = repo.getUsuarioDAO();
-    private static final EquipoDAO equipoDAO =  repo.getEquipoDAO();
+    private static final EquipoDAO equipoDAO = repo.getEquipoDAO();
     private static final MercadoDAO mercadoDAO = repo.getMercadoDAO();
     private static final JugadorDAO jugadorDAO = repo.getJugadorDAO();
-    private static final JornadaDAO jornadaDAO  = repo.getJornadaDAO();
+    private static final JornadaDAO jornadaDAO = repo.getJornadaDAO();
+
     /*
-    Devuelve todos los jugadores de tu equipo
+     * Devuelve todos los jugadores de tu equipo
      */
     /*
- Devuelve una tabla con los jugadores de un equipo concreto
- */
+     * Devuelve una tabla con los jugadores de un equipo concreto
+     */
     public static String getAllJugadoresfromEquipo(String idEquipo) {
         try {
 
@@ -34,8 +35,7 @@ public class JugadorServicio {
                     "NOMBRE",
                     "POS",
                     "EQUIPOID",
-                    "PRECIO (M€)"
-            );
+                    "PRECIO (M€)");
 
             table.setAlign("ID", TextTable.Align.RIGHT);
             table.setAlign("PRECIO (M€)", TextTable.Align.RIGHT);
@@ -51,8 +51,7 @@ public class JugadorServicio {
                         j.getNombre(),
                         j.getPosicion().name(),
                         j.getIdEquipo(),
-                        String.format("%.2f", j.getPrecio())
-                );
+                        String.format("%.2f", j.getPrecio()));
             }
 
             return table.toString();
@@ -62,8 +61,8 @@ public class JugadorServicio {
     }
 
     /*
- Devuelve una tabla con todos los jugadores de la liga
- */
+     * Devuelve una tabla con todos los jugadores de la liga
+     */
     public static List<Jugador> getAllJugadores() {
         try {
             return jugadorDAO.listarTodos();

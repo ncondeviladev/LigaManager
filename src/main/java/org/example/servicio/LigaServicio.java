@@ -18,14 +18,14 @@ import static org.example.servicio.GeneradorJornadas.generarLigaCompleta;
 import static org.example.servicio.SimularJornada.simularJornada;
 
 public class LigaServicio {
-    private static final LigaRepo repo = RepoFactory.getRepositorio("JSON");
+    private static final LigaRepo repo = RepoFactory.getRepositorio(System.getProperty("TIPO_DATOS", "JSON"));
 
     // DAOs instanciados al inicio para uso en toda la clase
     private static final UsuarioDAO usuarioDAO = repo.getUsuarioDAO();
-    private static final EquipoDAO equipoDAO =  repo.getEquipoDAO();
+    private static final EquipoDAO equipoDAO = repo.getEquipoDAO();
     private static final MercadoDAO mercadoDAO = repo.getMercadoDAO();
     private static final JugadorDAO jugadorDAO = repo.getJugadorDAO();
-    private static final JornadaDAO jornadaDAO  = repo.getJornadaDAO();
+    private static final JornadaDAO jornadaDAO = repo.getJornadaDAO();
 
     private static int contadorJornadas = 1;
 
@@ -79,17 +79,15 @@ public class LigaServicio {
                         e.getNombre(),
                         String.valueOf(e.getPuntos()),
                         String.valueOf(e.getGf()),
-                        String.valueOf(e.getGc())
-                );
+                        String.valueOf(e.getGc()));
                 posicion++;
             }
 
             return table.toString();
         } catch (DataAccessException e) {
-            return(e.getMessage());
+            return (e.getMessage());
         }
     }
-
 
     public static String mostrarJornadas() {
         try {
@@ -112,8 +110,7 @@ public class LigaServicio {
                     table.addRow(
                             String.valueOf(j.getNumero()),
                             j.getId(),
-                            String.valueOf(j.getPartidos().size())
-                    );
+                            String.valueOf(j.getPartidos().size()));
                 }
             }
 
@@ -122,7 +119,6 @@ public class LigaServicio {
             return (e.getMessage());
         }
     }
-
 
     public static void realizarSimulacion() {
         try {

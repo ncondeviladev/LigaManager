@@ -1,6 +1,11 @@
 plugins {
     id 'java'
     id 'eclipse'
+    id 'application'
+}
+
+application {
+    mainClass = 'org.example.Main'
 }
 
 group = 'org.example'
@@ -21,4 +26,8 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+run { //Para que pueda leer la opcion de acceso a datos antes de arrancar la app
+    standardInput = System.in
 }

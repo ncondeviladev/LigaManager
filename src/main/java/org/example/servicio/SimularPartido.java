@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SimularPartido {
 
-    private static final LigaRepo repo = RepoFactory.getRepositorio("JSON");
+    private static final LigaRepo repo = RepoFactory.getRepositorio(System.getProperty("TIPO_DATOS", "JSON"));
 
     private static final int JUGADAS_MAX = 120;
 
@@ -104,8 +104,7 @@ public class SimularPartido {
 
             System.out.println(
                     equipoLocal.getNombre() + " " + golesLocal +
-                            " - " + golesVisitante + " " + equipoVisitante.getNombre()
-            );
+                            " - " + golesVisitante + " " + equipoVisitante.getNombre());
         } catch (DataAccessException e) {
             System.out.println(e.getMessage());
         }
@@ -137,9 +136,12 @@ public class SimularPartido {
         int index = 0;
 
         equipo[index++] = buscarJugador(alineacion.getPortero(), jugadores);
-        for (String id : alineacion.getDefensas()) equipo[index++] = buscarJugador(id, jugadores);
-        for (String id : alineacion.getMedios()) equipo[index++] = buscarJugador(id, jugadores);
-        for (String id : alineacion.getDelanteros()) equipo[index++] = buscarJugador(id, jugadores);
+        for (String id : alineacion.getDefensas())
+            equipo[index++] = buscarJugador(id, jugadores);
+        for (String id : alineacion.getMedios())
+            equipo[index++] = buscarJugador(id, jugadores);
+        for (String id : alineacion.getDelanteros())
+            equipo[index++] = buscarJugador(id, jugadores);
 
         return equipo;
     }

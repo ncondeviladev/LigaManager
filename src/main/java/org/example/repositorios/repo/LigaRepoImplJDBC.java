@@ -25,6 +25,7 @@ public class LigaRepoImplJDBC implements LigaRepo {
         this.usuarioDAO = new UsuarioDAOImplJDBC();
         this.mercadoDAO = new MercadoDAOImplJDBC();
         this.jornadaDAO = new JornadaDAOImplJDBC();
+        System.out.println(">> Repositorio SQL (JDBC) inicializado correctamente.");
     }
 
     @Override

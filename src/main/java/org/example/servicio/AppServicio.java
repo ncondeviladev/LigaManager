@@ -1,5 +1,6 @@
 package org.example.servicio;
 
+import org.example.modelos.competicion.Jornada;
 import org.example.modelos.*;
 import org.example.modelos.enums.Formacion;
 import org.example.modelos.enums.Posicion;
@@ -22,7 +23,9 @@ import static org.example.modelos.enums.Formacion.F442;
  */
 public class AppServicio {
 
-    private static final LigaRepo repo = RepoFactory.getRepositorio("JSON");
+    // Cambiamos el acceso a la base de datos a través de la factoría, json por
+    // defecto
+    private static final LigaRepo repo = RepoFactory.getRepositorio(System.getProperty("TIPO_DATOS", "JSON"));
 
     // DAOs instanciados al inicio para uso en toda la clase
     private static final UsuarioDAO usuarioDAO = repo.getUsuarioDAO();
@@ -31,7 +34,6 @@ public class AppServicio {
     private static final JugadorDAO jugadorDAO = repo.getJugadorDAO();
     private static final JornadaDAO jornadaDAO = repo.getJornadaDAO();
 
-
     /**
      * Autentica un usuario en el sistema.
      * Verifica que el email exista y que el hash de la contraseña coincida.
@@ -39,7 +41,7 @@ public class AppServicio {
      * @param email    Correo electrónico del usuario.
      * @param password Contraseña del usuario (texto plano).
      * @return Optional con el Usuario si la autenticación es exitosa, o vacío si
-     * falla.
+     *         falla.
      */
     public static Optional<Usuario> login(String email, String password) {
         try {
@@ -61,6 +63,62 @@ public class AppServicio {
         } catch (DataAccessException e) {
             System.out.println(e.getMessage());
             return null;
+        }
+    }
+
+    public static void inicializar() {
+        // Metodo dummy para forzar la carga de la clase y la configuracion del
+        // repositorio
+
+        // Si estamos en modo SQL y no hay datos, migramos desde JSON
+        if ("SQL".equalsIgnoreCase(System.getProperty("TIPO_DATOS"))) {
+            migrarDatos();
+        }
+    }
+
+    private static void migrarDatos() {
+        try {
+            System.out.println(">> Verificando estado de la base de datos para migración...");
+
+            // Instanciamos el repo JSON
+            LigaRepo repoJson = RepoFactory.getRepositorio("JSON");
+
+            if (equipoDAO.listarTodos().isEmpty()) {
+                System.out.println("... Migrando Equipos desde JSON ...");
+                equipoDAO.guardarTodos(repoJson.getEquipoDAO().listarTodos());
+            }
+
+            if (jugadorDAO.listarTodos().isEmpty()) {
+                System.out.println("... Migrando Jugadores desde JSON ...");
+                jugadorDAO.guardarTodos(repoJson.getJugadorDAO().listarTodos());
+            }
+
+            if (usuarioDAO.listarTodos().isEmpty()) {
+                System.out.println("... Migrando Usuarios desde JSON ...");
+                usuarioDAO.guardarTodos(repoJson.getUsuarioDAO().listarTodos());
+            }
+
+            if (mercadoDAO.listarTodos().isEmpty()) {
+                System.out.println("... Migrando Mercado desde JSON ...");
+                List<Mercado> mercado = repoJson.getMercadoDAO().listarTodos();
+                for (Mercado m : mercado) {
+                    mercadoDAO.guardar(m);
+                }
+            }
+
+            // 5. Jornadas
+            if (jornadaDAO.listarTodas().isEmpty()) {
+                System.out.println("... Migrando Jornadas desde JSON ...");
+                jornadaDAO.guardarTodas(repoJson.getJornadaDAO().listarTodas());
+            }
+
+            System.out.println(">> Verificación de migración completada.");
+
+        } catch (DataAccessException e) {
+            System.err.println(">> Error de acceso a datos durante la migración: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println(">> Error inesperado durante la migración: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -113,13 +171,16 @@ public class AppServicio {
                 switch (jugador.getPosicion()) {
                     case PORTERO -> portero = jugador.getId();
                     case DEFENSA -> {
-                        if (defensas.size() < 4) defensas.add(jugador.getId());
+                        if (defensas.size() < 4)
+                            defensas.add(jugador.getId());
                     }
                     case MEDIO -> {
-                        if (medios.size() < 4) medios.add(jugador.getId());
+                        if (medios.size() < 4)
+                            medios.add(jugador.getId());
                     }
                     case DELANTERO -> {
-                        if (delanteros.size() < 2) delanteros.add(jugador.getId());
+                        if (delanteros.size() < 2)
+                            delanteros.add(jugador.getId());
                     }
                 }
             }
@@ -135,8 +196,7 @@ public class AppServicio {
                     tipoUsuario,
                     100000.0,
                     alineacion,
-                    idEquipo
-            );
+                    idEquipo);
 
             usuarioDAO.guardar(usuario);
 

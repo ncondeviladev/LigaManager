@@ -32,6 +32,7 @@ public class LigaRepoImplJSON implements LigaRepo {
         this.mercadoDAO = new MercadoDAOImplJSON(mercado);
         this.jugadorDAO = new JugadorDAOImplJSON(jugadores);
         this.jornadaDAO = new JornadaDAOImplJSON(competicion);
+        System.out.println(">> Repositorio JSON inicializado correctamente.");
     }
 
     @Override

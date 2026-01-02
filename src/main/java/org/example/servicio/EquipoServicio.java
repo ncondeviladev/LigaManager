@@ -13,16 +13,15 @@ import java.util.Objects;
 import org.example.utils.TextTable;
 import org.example.utils.dataUtils.DataAccessException;
 
-
 public class EquipoServicio {
 
-    private static final LigaRepo repo = RepoFactory.getRepositorio("JSON");
+    private static final LigaRepo repo = RepoFactory.getRepositorio(System.getProperty("TIPO_DATOS", "JSON"));
 
     // DAOs instanciados al inicio para uso en toda la clase
     private static final EquipoDAO equipoDAO = repo.getEquipoDAO();
     private static final UsuarioDAO usuarioDAO = repo.getUsuarioDAO();
 
-    //Debe mostrar una lista de los equipos junto a sus IDs
+    // Debe mostrar una lista de los equipos junto a sus IDs
     public static String mostrarEquipos() {
         try {
 
@@ -52,14 +51,12 @@ public class EquipoServicio {
                     table.addRow(
                             String.valueOf(e.getId()),
                             e.getNombre(),
-                            usuarioAsignado.getEmail()
-                    );
+                            usuarioAsignado.getEmail());
                 } else {
                     table.addRow(
                             String.valueOf(e.getId()),
                             e.getNombre(),
-                            "Sin asignar"
-                    );
+                            "Sin asignar");
                 }
             }
 

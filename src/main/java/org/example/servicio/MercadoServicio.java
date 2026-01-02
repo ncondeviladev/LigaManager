@@ -13,7 +13,7 @@ import java.text.NumberFormat;
 import java.util.*;
 
 public class MercadoServicio {
-    private static final LigaRepo repo = RepoFactory.getRepositorio("JSON");
+    private static final LigaRepo repo = RepoFactory.getRepositorio(System.getProperty("TIPO_DATOS", "JSON"));
 
     // DAOs instanciados al inicio para uso en toda la clase
     private static final UsuarioDAO usuarioDAO = repo.getUsuarioDAO();
@@ -125,8 +125,7 @@ public class MercadoServicio {
                     "ID Mercado",
                     "Jugador",
                     "Vendedor",
-                    "Precio (M€)"
-            );
+                    "Precio (M€)");
 
             table.setAlign("Precio (M€)", TextTable.Align.RIGHT);
 
@@ -141,24 +140,22 @@ public class MercadoServicio {
                 // Obtener usuario vendedor desde repositorio
                 Optional<Usuario> vendedor = usuarioDAO.buscarPorId(m.getVendedorId());
                 String nombreVendedor = (vendedor.isPresent())
-                        ? vendedor.get().getEmail()   // o getNombre() si existe
+                        ? vendedor.get().getEmail() // o getNombre() si existe
                         : "Desconocido";
 
                 table.addRow(
                         m.getId(),
                         nombreJugador,
                         nombreVendedor,
-                        String.format("%.2f", m.getPrecioVenta())
-                );
+                        String.format("%.2f", m.getPrecioVenta()));
             }
 
             return table.toString();
 
         } catch (DataAccessException e) {
-            return(e.getMessage());
+            return (e.getMessage());
         }
     }
-
 
     public static String jugadoresEnVenta(Usuario usuario) {
         try {
@@ -172,8 +169,7 @@ public class MercadoServicio {
                     "ID Mercado",
                     "Jugador",
                     "Vendedor",
-                    "Precio (M€)"
-            );
+                    "Precio (M€)");
 
             table.setAlign("Precio (M€)", TextTable.Align.RIGHT);
 
@@ -188,21 +184,20 @@ public class MercadoServicio {
                 // Resolver vendedor
                 Optional<Usuario> vendedor = usuarioDAO.buscarPorId(m.getVendedorId());
                 String nombreVendedor = (vendedor.isPresent())
-                        ? vendedor.get().getEmail()   // o nombre si existiera
+                        ? vendedor.get().getEmail() // o nombre si existiera
                         : "Desconocido";
 
                 table.addRow(
                         m.getId(),
                         nombreJugador,
                         nombreVendedor,
-                        String.format("%.2f", m.getPrecioVenta())
-                );
+                        String.format("%.2f", m.getPrecioVenta()));
             }
 
             return table.toString();
 
         } catch (DataAccessException e) {
-            return(e.getMessage());
+            return (e.getMessage());
         }
     }
 

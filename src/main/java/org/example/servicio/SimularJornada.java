@@ -11,60 +11,61 @@ import java.util.List;
 
 public class SimularJornada {
 
-    private static final LigaRepo repo = RepoFactory.getRepositorio("JSON");
+        private static final LigaRepo repo = RepoFactory.getRepositorio(System.getProperty("TIPO_DATOS", "JSON"));
 
-    public static void simularJornada(
-            Jornada jornada,
-            List<Jugador> todosLosJugadores) {
-        try {
-            System.out.println("===== JORNADA " + jornada.getNumero() + " =====");
+        public static void simularJornada(
+                        Jornada jornada,
+                        List<Jugador> todosLosJugadores) {
+                try {
+                        System.out.println("===== JORNADA " + jornada.getNumero() + " =====");
 
-            for (Partido partido : jornada.getPartidos()) {
+                        for (Partido partido : jornada.getPartidos()) {
 
-                Equipo equipoLocal = repo.getEquipoDAO()
-                        .buscarPorId(partido.getEquipoLocalId())
-                        .orElseThrow();
+                                Equipo equipoLocal = repo.getEquipoDAO()
+                                                .buscarPorId(partido.getEquipoLocalId())
+                                                .orElseThrow();
 
-                Equipo equipoVisitante = repo.getEquipoDAO()
-                        .buscarPorId(partido.getEquipoVisitanteId())
-                        .orElseThrow();
+                                Equipo equipoVisitante = repo.getEquipoDAO()
+                                                .buscarPorId(partido.getEquipoVisitanteId())
+                                                .orElseThrow();
 
-                // Buscar usuarios (pueden no existir)
-                Usuario usuarioLocal = repo.getUsuarioDAO()
-                        .buscarPorIdEquipo(equipoLocal.getId())
-                        .orElse(null);
+                                // Buscar usuarios (pueden no existir)
+                                Usuario usuarioLocal = repo.getUsuarioDAO()
+                                                .buscarPorIdEquipo(equipoLocal.getId())
+                                                .orElse(null);
 
-                Usuario usuarioVisitante = repo.getUsuarioDAO()
-                        .buscarPorIdEquipo(equipoVisitante.getId())
-                        .orElse(null);
+                                Usuario usuarioVisitante = repo.getUsuarioDAO()
+                                                .buscarPorIdEquipo(equipoVisitante.getId())
+                                                .orElse(null);
 
-                // Determinar alineaciones
-                Alineacion alineacionLocal =
-                        (usuarioLocal != null && usuarioLocal.getAlineacion() != null)
-                                ? usuarioLocal.getAlineacion()
-                                : AlineacionIA.generar(equipoLocal.getId(), todosLosJugadores);
+                                // Determinar alineaciones
+                                Alineacion alineacionLocal = (usuarioLocal != null
+                                                && usuarioLocal.getAlineacion() != null)
+                                                                ? usuarioLocal.getAlineacion()
+                                                                : AlineacionIA.generar(equipoLocal.getId(),
+                                                                                todosLosJugadores);
 
-                Alineacion alineacionVisitante =
-                        (usuarioVisitante != null && usuarioVisitante.getAlineacion() != null)
-                                ? usuarioVisitante.getAlineacion()
-                                : AlineacionIA.generar(equipoVisitante.getId(), todosLosJugadores);
+                                Alineacion alineacionVisitante = (usuarioVisitante != null
+                                                && usuarioVisitante.getAlineacion() != null)
+                                                                ? usuarioVisitante.getAlineacion()
+                                                                : AlineacionIA.generar(equipoVisitante.getId(),
+                                                                                todosLosJugadores);
 
-                // Simular partido
-                SimularPartido.simularPartido(
-                        partido,
-                        alineacionLocal,
-                        alineacionVisitante,
-                        todosLosJugadores,
-                        equipoLocal,
-                        equipoVisitante
-                );
-            }
+                                // Simular partido
+                                SimularPartido.simularPartido(
+                                                partido,
+                                                alineacionLocal,
+                                                alineacionVisitante,
+                                                todosLosJugadores,
+                                                equipoLocal,
+                                                equipoVisitante);
+                        }
 
-            repo.getJornadaDAO().guardar(jornada);
+                        repo.getJornadaDAO().guardar(jornada);
 
-            System.out.println("===== FIN DE JORNADA =====");
-        } catch (DataAccessException e) {
-            System.out.println(e.getMessage());
+                        System.out.println("===== FIN DE JORNADA =====");
+                } catch (DataAccessException e) {
+                        System.out.println(e.getMessage());
+                }
         }
-    }
 }

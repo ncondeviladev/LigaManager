@@ -129,7 +129,7 @@ public class JugadorDAOImplJDBC implements JugadorDAO {
             conn.commit();
 
         } catch (SQLException e) {
-            throw new DataAccessException("Error al guardar lista de jugadores", e);
+            throw new DataAccessException("Error al guardar lista de jugadores: " + e.getMessage(), e);
         }
     }
 

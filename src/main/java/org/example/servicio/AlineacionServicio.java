@@ -17,7 +17,7 @@ import java.util.function.BiConsumer;
 public class AlineacionServicio {
 
     // Repositorio principal (JSON)
-    private static final LigaRepo repo = RepoFactory.getRepositorio("JSON");
+    private static final LigaRepo repo = RepoFactory.getRepositorio(System.getProperty("TIPO_DATOS", "JSON"));
 
     // DAOs para acceso a usuarios y equipos
     private static final UsuarioDAO usuarioDAO = repo.getUsuarioDAO();
@@ -47,8 +47,7 @@ public class AlineacionServicio {
                         if (j.getId().equals(id)) {
                             table.addRow(
                                     posicion,
-                                    j.getNombre()
-                            );
+                                    j.getNombre());
                             break;
                         }
                     }
@@ -69,7 +68,6 @@ public class AlineacionServicio {
         }
 
     }
-
 
     /**
      * Cambia la formación según la opción elegida
@@ -152,7 +150,8 @@ public class AlineacionServicio {
                 }
             }
 
-            if (defensasValidas.size() != getNumeroDefensas(usuario)) return false;
+            if (defensasValidas.size() != getNumeroDefensas(usuario))
+                return false;
 
             alineacion.setDefensas(defensasValidas);
             usuarioDAO.guardar(usuario);
@@ -193,7 +192,8 @@ public class AlineacionServicio {
                 }
             }
 
-            if (mediosValidos.size() != getNumeroMedios(usuario)) return false;
+            if (mediosValidos.size() != getNumeroMedios(usuario))
+                return false;
 
             alineacion.setMedios(mediosValidos);
             usuarioDAO.guardar(usuario);
@@ -203,7 +203,6 @@ public class AlineacionServicio {
             return false;
         }
     }
-
 
     /**
      * Devuelve el número de delanteros
@@ -235,7 +234,8 @@ public class AlineacionServicio {
                 }
             }
 
-            if (delanterosValidos.size() != getNumeroDelanteros(usuario)) return false;
+            if (delanterosValidos.size() != getNumeroDelanteros(usuario))
+                return false;
 
             alineacion.setDelanteros(delanterosValidos);
             usuarioDAO.guardar(usuario);
