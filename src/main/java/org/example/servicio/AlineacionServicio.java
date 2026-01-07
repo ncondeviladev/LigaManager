@@ -31,42 +31,40 @@ public class AlineacionServicio {
      */
     public static String alineacionATexto(Alineacion alineacion) {
         try {
-            // Lista completa de jugadores
+            // 1. Creamos un Mapa simple para relacionar ID con NOMBRE
+            // Esto nos permite obtener el nombre de un jugador sabiendo su ID sin buscar en la lista
+            Map<String, String> nombresJugadores = new HashMap<>();
             List<Jugador> jugadores = JugadorServicio.getAllJugadores();
 
-            // Crear tabla con solo POSICIÓN y NOMBRE
-            TextTable table = new TextTable(1, "POSICIÓN", "NOMBRE");
+            for (Jugador j : jugadores) {
+                nombresJugadores.put(j.getId(), j.getNombre());
+            }
 
-            // Alinear nombre a la izquierda
+            TextTable table = new TextTable(1, "POSICIÓN", "NOMBRE");
             table.setAlign("NOMBRE", TextTable.Align.LEFT);
 
-            // Función auxiliar para añadir jugadores a la tabla
-            BiConsumer<List<String>, String> addJugadores = (ids, posicion) -> {
-                for (String id : ids) {
-                    for (Jugador j : jugadores) {
-                        if (j.getId().equals(id)) {
-                            table.addRow(
-                                    posicion,
-                                    j.getNombre());
-                            break;
-                        }
-                    }
-                }
-            };
+            // 2. Añadimos el Portero (es un solo String, no una lista)
+            String nombrePortero = nombresJugadores.get(alineacion.getPortero());
+            table.addRow("PORTERO", nombrePortero);
 
-            // Añadir jugadores por posición
-            addJugadores.accept(List.of(alineacion.getPortero()), "PORTERO");
-            addJugadores.accept(alineacion.getDefensas(), "DEFENSA");
-            addJugadores.accept(alineacion.getMedios(), "MEDIO");
-            addJugadores.accept(alineacion.getDelanteros(), "DELANTERO");
+            // 3. Añadimos las demás posiciones usando bucles for sencillos
+            for (String id : alineacion.getDefensas()) {
+                table.addRow("DEFENSA", nombresJugadores.get(id));
+            }
 
-            // Devolver tabla como String
+            for (String id : alineacion.getMedios()) {
+                table.addRow("MEDIO", nombresJugadores.get(id));
+            }
+
+            for (String id : alineacion.getDelanteros()) {
+                table.addRow("DELANTERO", nombresJugadores.get(id));
+            }
+
             return "Formación: " + alineacion.getFormacion() + "\n" + table.toString();
 
         } catch (DataAccessException e) {
             return e.getMessage();
         }
-
     }
 
     /**
