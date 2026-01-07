@@ -5,15 +5,14 @@ import org.example.modelos.Equipo;
 import org.example.modelos.Jugador;
 import org.example.modelos.Usuario;
 import org.example.modelos.competicion.Jornada;
+import org.example.modelos.competicion.Partido;
 import org.example.repositorios.dao.*;
 import org.example.repositorios.repo.LigaRepo;
 import org.example.repositorios.repo.RepoFactory;
 import org.example.utils.TextTable;
 import org.example.utils.dataUtils.DataAccessException;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static org.example.servicio.GeneradorJornadas.generarLigaCompleta;
 import static org.example.servicio.SimularJornada.simularJornada;
@@ -156,6 +155,53 @@ public class LigaServicio {
             }
         } catch (DataAccessException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    public static String mostrarPartidosJornada(String idJornada) {
+        try {
+            List<Jornada> jornadas = jornadaDAO.listarTodas();
+
+            // Ordenar por ID de menor a mayor
+            jornadas.sort(Comparator.comparing(Jornada::getId));
+
+            Jornada jornada = null;
+
+            for (Jornada j : jornadas) {
+                if (j.getPartidos().get(1).getGolesLocal() >= 0) {
+                    if (Objects.equals(j.getId(), idJornada)) {
+                        jornada = j;
+                    }
+                } else {
+                    break;
+                }
+            }
+
+            if (jornada != null) {
+                // Crear tabla con cabeceras
+                TextTable table = new TextTable(1, "ID PARTIDO", "EQUIPO LOCAL", "EQUIPO VISITANTE", "GOLES LOCAL", "GOLES VISITANTE");
+
+                table.setAlign("EQUIPO LOCAL", TextTable.Align.RIGHT);
+                table.setAlign("EQUIPO VISITANTE", TextTable.Align.RIGHT);
+                try {
+                    for (Partido p : jornada.getPartidos()) {
+                        table.addRow(
+                                p.getId(),
+                                equipoDAO.buscarPorId(p.getEquipoLocalId()).get().getNombre(),
+                                equipoDAO.buscarPorId(p.getEquipoVisitanteId()).get().getNombre(),
+                                String.valueOf(p.getGolesLocal()),
+                                String.valueOf(p.getGolesVisitante())
+                        );
+                    }
+                } catch (NoSuchElementException e) {
+                    System.out.println(e.getMessage());
+                }
+
+                return table.toString();
+            }
+            return "Jornada no existe o no se ha jugado todavía";
+        } catch (DataAccessException e) {
+            return (e.getMessage());
         }
     }
 }
