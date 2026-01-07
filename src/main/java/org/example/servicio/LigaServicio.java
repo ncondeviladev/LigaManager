@@ -12,6 +12,7 @@ import org.example.utils.TextTable;
 import org.example.utils.dataUtils.DataAccessException;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.example.servicio.GeneradorJornadas.generarLigaCompleta;
@@ -27,7 +28,20 @@ public class LigaServicio {
     private static final JugadorDAO jugadorDAO = repo.getJugadorDAO();
     private static final JornadaDAO jornadaDAO = repo.getJornadaDAO();
 
-    private static int contadorJornadas = 1;
+    private static int contadorJornadas = getJornadas();
+
+    private static int getJornadas() {
+        if (jornadaDAO.listarTodas().isEmpty()) {
+            return 1;
+        } else {
+            for (Jornada j : jornadaDAO.listarTodas()) {
+                if (j.getPartidos().get(1).getGolesLocal() == -1) {
+                    return j.getNumero();
+                }
+            }
+        }
+        return -1;
+    }
 
     public static String mostrarClasificacion() {
         try {
@@ -94,7 +108,7 @@ public class LigaServicio {
             List<Jornada> jornadas = jornadaDAO.listarTodas();
 
             // Ordenar por ID de menor a mayor
-            jornadas.sort((j1, j2) -> j1.getId().compareTo(j2.getId()));
+            jornadas.sort(Comparator.comparing(Jornada::getId));
 
             // Crear tabla con cabeceras
             TextTable table = new TextTable(1, "JORNADA", "ID", "PARTIDOS");
@@ -122,9 +136,16 @@ public class LigaServicio {
 
     public static void realizarSimulacion() {
         try {
-            List<Jornada> jornadas = generarLigaCompleta(repo, equipoDAO.listarTodos());
+            List<Jornada> jornadas = jornadaDAO.listarTodas();
+            if (jornadas.isEmpty()) {
+                jornadas = generarLigaCompleta(repo, equipoDAO.listarTodos());
+            }
+
 
             List<Jugador> jugadores = repo.getJugadorDAO().listarTodos();
+
+            assert jornadas != null;
+            jornadas.sort(Comparator.comparing(Jornada::getId));
 
             for (Jornada j : jornadas) {
                 if (j.getNumero() == contadorJornadas) {

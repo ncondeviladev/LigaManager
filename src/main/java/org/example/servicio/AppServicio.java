@@ -147,20 +147,27 @@ public class AppServicio {
         }
     }
 
-    public static void crearUsuario(String email, String password, TipoUsuario tipoUsuario, String idEquipo) {
+    public static int crearUsuario(String email, String password, TipoUsuario tipoUsuario, String idEquipo) {
         try {
             // Comprobar que el equipo existe
             Optional<Equipo> equipoOpt = equipoDAO.buscarPorId(idEquipo);
             if (equipoOpt.isEmpty()) {
                 System.out.println("El equipo seleccionado no existe.");
-                return;
+                return 1;
             }
 
             // 2Comprobar que el equipo no esté ya asignado
             if (!usuarioDAO.buscarPorIdEquipo(idEquipo).isEmpty()) {
                 System.out.println("El equipo que has elegido ya pertenece a otro usuario.");
-                return;
+                return 1;
             }
+
+            //Regex del email
+            if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+                System.out.println("Email no válido");
+                return 2;
+            }
+
 
             List<Usuario> usuarios = usuarioDAO.listarTodos();
             Set<Integer> usados = new HashSet<>();
@@ -171,7 +178,7 @@ public class AppServicio {
                 usados.add(numero);
                 if (Objects.equals(u.getEmail(), email)) {
                     System.out.println("El usuario existe en el sistema.");
-                    return;
+                    return 2;
                 }
             }
 
@@ -226,8 +233,10 @@ public class AppServicio {
             usuarioDAO.guardar(usuario);
 
             System.out.println("Usuario creado correctamente.");
+            return 0;
         } catch (DataAccessException e) {
             System.out.println(e.getMessage());
+            return 2;
         }
     }
 
