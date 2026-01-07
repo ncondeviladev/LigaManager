@@ -35,7 +35,7 @@ El proyecto **Liga Manager** es una aplicación Java para gestionar una liga de 
 Esta capa se encarga de hacer funcionar las diferentes funcionalidades de la app.
 
 ### 2.1. Lógica de Usuarios
-A completar por Ivan
+La lógica de usuario implementa funciones para manejar usuarios, como: mostrar , crear , borrar usuarios o iniciar sesion
 
 ### 2.2. Lógica de Equipos
 La lógica de equipos se encarga de darnos la opción a ver una tabla con todos los qeuipos y sus usuarios.
@@ -48,14 +48,12 @@ La lógica de mercado nos permite:
 - Ver nuestros jugadores en venta.
 
 ### 2.4. Lógica de Alineación
-A completar por Ivan
-
+La logica de alineación se encarga principalmente de permitir cambiar los jugador de tu alineacion tanto como la formacion y consultar la esta informacón
 ### 2.5. Lógica de Liga
 La lógica de la liga nos permite ver la clasificación, ver jornadas pasadas y realizar simulaciones de jornadas.
 
 ### 2.6. Lógica de Jugadores
-A completar por Ivan
-
+La logica de los jugador nos permite consultar todos los jugadores al igual que los de un equipo concreto
 
 ---
 
