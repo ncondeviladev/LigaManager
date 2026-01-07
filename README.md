@@ -38,16 +38,20 @@ Esta capa se encarga de hacer funcionar las diferentes funcionalidades de la app
 A completar por Ivan
 
 ### 2.2. Lógica de Equipos
-A completar por Dayron
+La lógica de equipos se encarga de darnos la opción a ver una tabla con todos los qeuipos y sus usuarios.
 
 ### 2.3. Lógica de Mercado
-A completar por Dayron
+La lógica de mercado nos permite:
+- Ver nuestro saldo.
+- Vender jugadores.
+- Comprar jugadores.
+- Ver nuestros jugadores en venta.
 
 ### 2.4. Lógica de Alineación
 A completar por Ivan
 
 ### 2.5. Lógica de Liga
-A completar por Dayron
+La lógica de la liga nos permite ver la clasificación, ver jornadas pasadas y realizar simulaciones de jornadas.
 
 ### 2.6. Lógica de Jugadores
 A completar por Ivan
