@@ -6,6 +6,8 @@ import org.example.utils.MenuUtils;
 
 import java.util.Scanner;
 
+import static org.example.servicio.MercadoServicio.verSaldo;
+
 //Esta clase muestra el menú del mercado que nos permite comprar y vender jugadores
 public class MenuMercado {
 
@@ -16,18 +18,25 @@ public class MenuMercado {
     public static void mostrarMenuMercado(Usuario usuario) {
         int opcion;
         do {
-            opcion = MenuUtils.crearMenu("=== MERCADO ===", "Jugadores en venta", "Vender jugador", "Tus jugadores en venta", "Volver");
+            opcion = MenuUtils.crearMenu("=== MERCADO ===", "Ver saldo", "Jugadores en venta", "Vender jugador", "Tus jugadores en venta", "Volver");
 
             switch (opcion) {
-                case 1: jugadoresEnVenta(usuario);
+                case 1: verDinero(usuario);
                 break;
-                case 2: venderJugador(usuario);
+                case 2: jugadoresEnVenta(usuario);
                 break;
-                case 3: tusJugadoresEnVenta(usuario);
+                case 3: venderJugador(usuario);
+                break;
+                case 4: tusJugadoresEnVenta(usuario);
                 break;
             }
         } while (opcion != 4);
     }
+    private static void verDinero (Usuario usuario) {
+        System.out.println(verSaldo(usuario) + "M€");
+    }
+
+
 
     /*
     muestra todos los jugadores en venta a excepción de los que vende el propio usuarios

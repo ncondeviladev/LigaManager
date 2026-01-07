@@ -200,5 +200,8 @@ public class MercadoServicio {
             return (e.getMessage());
         }
     }
+    public static double verSaldo (Usuario usuario) {
+        return usuario.getSaldo();
+    }
 
 }
