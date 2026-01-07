@@ -45,6 +45,8 @@ public class Menu {
         Optional<Usuario> usuario = AppServicio.login(nombre, contrasenya);
         if (usuario.isPresent()) {
             MenuUsuarios.mostrarMenuUsuarios(usuario.get());
+        } else {
+            System.out.println("Usuario o contraseña incorrecto");
         }
     }
 
@@ -72,7 +74,7 @@ public class Menu {
         System.out.print(EquipoServicio.mostrarEquipos());
         System.out.println("ID del equipo deseado:");
         String idequipo = sc.nextLine();
-
+        idequipo = idequipo.toUpperCase();
 
 
         TipoUsuario tipousu2 = null;
@@ -81,7 +83,13 @@ public class Menu {
         } else {
             tipousu2 = TipoUsuario.ESTANDAR;
         }
-        AppServicio.crearUsuario(gmail, contrasenya, tipousu2, idequipo);
+         while (AppServicio.crearUsuario(gmail, contrasenya, tipousu2, idequipo) == 1) {
+             System.out.println("Con que equipo quiere jugar?");
+             System.out.print(EquipoServicio.mostrarEquipos());
+             System.out.println("ID del equipo deseado:");
+             idequipo = sc.nextLine();
+             idequipo = idequipo.toUpperCase();
+         }
         }
 
 
