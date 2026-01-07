@@ -32,7 +32,26 @@ El proyecto **Liga Manager** es una aplicación Java para gestionar una liga de 
 
 ## 2. Capa de Lógica de Negocio
 
--- A completar Dayron Ivan --
+Esta capa se encarga de hacer funcionar las diferentes funcionalidades de la app.
+
+### 2.1. Lógica de Usuarios
+A completar por Ivan
+
+### 2.2. Lógica de Equipos
+A completar por Dayron
+
+### 2.3. Lógica de Mercado
+A completar por Dayron
+
+### 2.4. Lógica de Alineación
+A completar por Ivan
+
+### 2.5. Lógica de Liga
+A completar por Dayron
+
+### 2.6. Lógica de Jugadores
+A completar por Ivan
+
 
 ---
 
