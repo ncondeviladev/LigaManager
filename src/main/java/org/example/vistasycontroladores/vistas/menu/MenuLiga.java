@@ -7,7 +7,10 @@ import org.example.utils.MenuUtils;
 
 import java.util.Scanner;
 
+import static org.example.servicio.LigaServicio.mostrarPartidosJornada;
+
 public class MenuLiga {
+    private static Scanner sc = new Scanner(System.in);
     /*
     Muestra el menú de la liga
      */
@@ -33,6 +36,15 @@ public class MenuLiga {
 
     private static void mostrarJornadas() {
         System.out.println(LigaServicio.mostrarJornadas());
+        System.out.println("¿Quiéres ver los partidos de alguna jornada? (SÍ/NO)");
+        String opcion = sc.nextLine();
+        opcion = opcion.toLowerCase();
+
+        if (opcion.equals("si") || opcion.equals("sí")) {
+            System.out.print("Escribe el id de la jornada que quieras mostrar: ");
+            String jornada = sc.nextLine();
+            System.out.println(mostrarPartidosJornada(jornada.toUpperCase()));
+        }
     }
 
     private static void realizarSimulacion() {

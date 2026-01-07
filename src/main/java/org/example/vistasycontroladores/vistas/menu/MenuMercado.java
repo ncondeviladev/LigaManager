@@ -30,7 +30,7 @@ public class MenuMercado {
                 case 4: tusJugadoresEnVenta(usuario);
                 break;
             }
-        } while (opcion != 4);
+        } while (opcion != 5);
     }
     private static void verDinero (Usuario usuario) {
         System.out.println(verSaldo(usuario) + "M€");
@@ -59,7 +59,7 @@ public class MenuMercado {
     Permite al usuario comprar un jugador que esté en venta
      */
     private static void comprarJugador(Usuario usuario) {
-        System.out.print("Introduce el Id del jugador que deseas comprar: ");
+        System.out.print("Introduce el Id de mercado del jugador que deseas comprar: ");
         String id = sc.nextLine().toUpperCase();
 
         switch (MercadoServicio.comprarJugador(usuario, id)) {
